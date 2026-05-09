@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Infrastructure Map | GreenCloud{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-3">
+    <div class="row mb-4 align-items-end">
+        <div class="col-lg-8">
+            <span class="text-eco-green fw-semibold tracking-tight text-uppercase text-xs d-block mb-1">Live Telemetry</span>
+            <h2 class="fw-bold text-white tracking-tight mb-2">Geospatial Smart Placement</h2>
+            <p class="text-muted-custom text-sm mb-0">Identify optimal geographic zones for new workloads based on real-time grid carbon intensity.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-2" style="background-color: rgba(112, 162, 136, 0.1); border: 1px solid rgba(112, 162, 136, 0.2);">
+                <span class="status-indicator"></span>
+                <span class="text-white text-xs fw-semibold tracking-tight">Live Grid Sync</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        
+        <div class="col-lg-8 col-xl-9">
+            <div class="custom-card p-1 overflow-hidden" style="border-radius: 12px; min-height: 600px; border: 1px solid rgba(112, 162, 136, 0.3); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                
+                {% if map_html %}
+                    {{ map_html|safe }}
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center h-100 min-vh-50" style="background-color: rgba(255,255,255,0.02);">
+                        <div class="spinner-border text-eco-green" role="status">
+                            <span class="visually-hidden">Loading map...</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-xl-3">
+            <div class="custom-card p-4 h-100 d-flex flex-column" style="border-radius: 12px;">
+                <h5 class="fw-bold text-white mb-4 text-sm text-uppercase tracking-tight border-bottom border-secondary pb-3">ML Location Insights</h5>
+                
+                <div id="default-panel-state" class="text-center my-auto opacity-75">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="var(--text-muted)" class="mb-3" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                    </svg>
+                    <p class="text-muted-custom text-sm">Select a region marker on the map to evaluate its carbon efficiency and view ML recommendations.</p>
+                </div>
+
+                <div id="active-panel-state" class="d-none">
+                    <h3 class="fw-bold text-white mb-1" id="panel-region-name">Region Name</h3>
+                    <div class="badge badge-eco border px-3 py-2 text-xs fw-semibold mb-4 rounded-pill" id="panel-zone-type">
+                        High Renewable Potential
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight">Green Score</label>
+                        <div class="d-flex align-items-end gap-2 mt-1">
+                            <h2 class="fw-bold text-white mb-0" id="panel-green-score">85</h2>
+                            <span class="text-muted-custom text-sm pb-1">/ 100</span>
+                        </div>
+                        <div class="progress progress-glass mt-2">
+                            <div class="progress-bar bg-eco-green" id="panel-score-bar" style="width: 85%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight">Primary Energy Source</label>
+                        <p class="text-white fw-semibold text-md mt-1 mb-0" id="panel-energy-source">Wind / Solar</p>
+                    </div>
+
+                    <div class="mb-4 p-3 rounded-2" style="background-color: rgba(218, 183, 133, 0.1); border: 1px solid rgba(218, 183, 133, 0.3);">
+                        <label class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight" style="color: var(--color-terracotta) !important;">AI Recommendation</label>
+                        <p class="text-white text-sm mt-2 mb-0" id="panel-recommendation">Optimal location for batch processing workloads and non-latency-sensitive AI training.</p>
+                    </div>
+
+                    <button class="btn btn-outline-sand w-100 text-sm fw-semibold mt-auto">Export Full Report</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
