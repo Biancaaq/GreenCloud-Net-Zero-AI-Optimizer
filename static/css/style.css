@@ -1,0 +1,204 @@
+/* static/css/style.css */
+
+:root {
+    /* --- Your Custom Palette --- */
+    --color-bg-deep: #031D44;
+    --color-surface: #04395E;
+    --color-eco-green: #70A288;
+    --color-sand: #DAB785;
+    --color-terracotta: #D5896F;
+
+    /* Text Colors derived for contrast */
+    --text-light: #F8FAFC;    /* Almost white for main text */
+    --text-muted: #DAB785;    /* Using your Sand color for secondary text */
+}
+
+/* Global Reset & Body */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-bg-deep);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: var(--color-surface) !important;
+    border-bottom: 2px solid var(--color-eco-green);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    color: var(--text-light) !important;
+    letter-spacing: -0.5px;
+}
+
+.navbar-brand span {
+    color: var(--color-eco-green);
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    margin-left: 1rem;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--color-eco-green) !important;
+}
+
+/* Custom Buttons */
+.btn-primary-custom {
+    background-color: var(--color-eco-green);
+    color: var(--color-bg-deep);
+    font-weight: 600;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--text-light);
+    color: var(--color-bg-deep);
+    transform: translateY(-2px);
+}
+
+/* Cards & Surfaces (for your dashboard) */
+.custom-card {
+    background-color: var(--color-surface);
+    border: 1px solid rgba(218, 183, 133, 0.2); /* Faint sand border */
+    border-radius: 8px;
+    padding: 1.5rem;
+    color: var(--text-light);
+}
+
+/* =========================================
+   FOOTER STYLING & ANIMATIONS
+   ========================================= */
+
+.footer-custom {
+    background-color: var(--color-surface);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 1. Top Border Glow / Scanline Animation */
+.footer-custom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-eco-green), transparent);
+    animation: scanline 4s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+/* Utilities for Footer Text */
+.text-eco-green {
+    color: var(--color-eco-green) !important;
+}
+
+.text-muted-custom {
+    color: var(--color-sand);
+    opacity: 0.7;
+}
+
+.footer-divider {
+    border-color: rgba(218, 183, 133, 0.1); /* Faint sand color for the line */
+}
+
+/* 2. Hover Animations for Links */
+.footer-links {
+    padding-left: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.6rem;
+}
+
+.footer-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: var(--color-eco-green);
+    transform: translateX(6px); /* Glisează fin spre dreapta */
+}
+
+/* 3. Pulsing ML Engine Indicator */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: var(--color-eco-green);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px var(--color-eco-green);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(112, 162, 136, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(112, 162, 136, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(112, 162, 136, 0); }
+}
+
+/* Custom Outlined Button for GitHub */
+.btn-outline-eco {
+    color: var(--color-eco-green);
+    border: 1px solid var(--color-eco-green);
+    background-color: transparent;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-outline-eco:hover {
+    background-color: var(--color-eco-green);
+    color: var(--color-bg-deep);
+    border-color: var(--color-eco-green);
+}
+
+/* =========================================
+   TYPOGRAPHY & COMPONENT UTILITIES
+   ========================================= */
+
+.text-md {
+    font-size: 0.9rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.text-xs {
+    font-size: 0.85rem;
+}
+
+.tracking-tight {
+    letter-spacing: -0.5px;
+}
+
+.btn-disabled-custom {
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.badge-eco {
+    border-color: var(--color-eco-green) !important;
+    background-color: var(--color-bg-deep);
+}

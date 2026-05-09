@@ -1,55 +1,119 @@
+{% load static %} <!-- This MUST be at the very top -->
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Green Cloud Optimizare{% endblock %}</title>
+    <title>{% block title %}GreenCloud | Net Zero Optimizer{% endblock %}</title>
 
-    <!-- Bootstrap 5 CSS via CDN pentru viteză -->
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Aici vei putea adăuga fișierul tău custom.css mai târziu -->
-    {% load static %}
-</head>
-<body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Our Custom External CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <!-- Taskbar / Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- The rest of your navbar and body content remains exactly the same... -->
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg py-3 shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="#">🌱 GreenCloud</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <a class="navbar-brand" href="#">Green<span>Cloud</span></a>
+
+            <!-- Custom toggler icon for dark mode -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="var(--text-main)" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                </svg>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Hartă Interactivă</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Retrofitting</a></li>
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Smart Placement</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Retrofit Simulator</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Leaderboard</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Zona de Conținut Dinamic -->
-    <!-- Clasa flex-grow-1 împinge footer-ul mereu jos, chiar dacă pagina e goală -->
+    <!-- Main Content Area -->
     <main class="container my-5 flex-grow-1">
         {% block content %}
-        <!-- Tot ce scriu colegii tăi în alte pagini HTML va apărea MAGIC aici -->
+        <!-- Child templates will inject their content here -->
         {% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3 mt-auto">
-        <div class="container">
-            <p class="mb-0 text-secondary">© 2026 Misiunea Net Zero - Hackathon Project</p>
+    <footer class="footer-custom mt-auto">
+        <div class="container py-5">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="text-white fw-bold mb-3 tracking-tight">Green<span class="text-eco-green">Cloud</span></h5>
+                    <p class="text-muted-custom mb-4 text-md">
+                        Measuring, reducing, and making visible the environmental footprint of cloud workloads through efficient computing.
+                    </p>
+                    <div class="d-flex align-items-center">
+                        <span class="status-indicator"></span>
+                        <span class="ms-2 text-light text-xs fw-semibold">System Status: Ready</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="text-white fw-bold mb-3 text-uppercase text-xs">Navigation</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Smart Placement</a></li>
+                        <li><a href="#">Retrofit Simulator</a></li>
+                        <li><a href="#">Leaderboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white fw-bold mb-3 text-uppercase text-xs">Powered By</h6>
+                    <ul class="list-unstyled text-muted-custom text-md">
+                        <li class="mb-2">&bull; Python & Django</li>
+                        <li class="mb-2">&bull; Scikit-Learn</li>
+                        <li class="mb-2">&bull; Folium Maps</li>
+                        <li class="mb-2">&bull; Bootstrap 5</li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white fw-bold mb-3 text-uppercase text-xs">Project Code</h6>
+                    <p class="text-muted-custom mb-3 text-xs">Codebase hosted on the official organizers' repository.</p>
+
+                    <button class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2 btn-disabled-custom" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+                        </svg>
+                        Private Repository
+                    </button>
+                </div>
+            </div>
+
+            <hr class="footer-divider my-4">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <p class="mb-0 text-muted-custom text-sm">
+                    &copy; 2026 Net Zero Mission &middot; Team Hackathon Project
+                </p>
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Block pentru scripturi suplimentare (ex: Chart.js sau logica pentru hartă) -->
-    {% block scripts %}
-    {% endblock %}
+    <!-- Block for extra scripts (e.g., Charts, Maps logic) -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>
