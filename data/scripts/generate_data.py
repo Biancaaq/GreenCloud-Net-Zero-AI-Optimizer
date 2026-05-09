@@ -1,90 +1,107 @@
-"""
-STEP 2 — Generate Synthetic Data
-==================================
-Input:  data_centers_enriched.csv   (output of step1_enrich.py)
-Output: data_centers_ml_ready.csv   (real + synthetic rows, ready for ML)
-
-What it does:
-- Takes the 15 enriched real rows as "anchors"
-- Generates N synthetic rows per real row by adding realistic noise
-- Recalculates all derived columns for each synthetic row
-- Exports a combined dataset with real + synthetic rows
-
-How the noise works:
-- Each numeric column gets multiplied by a random factor (e.g. ±10%)
-- This simulates real-world variation between similar facilities
-- Values are clamped to realistic ranges (e.g. PUE never below 1.05)
-"""
-
 import pandas as pd
 import numpy as np
 
-N_SYNTHETIC_PER_ROW = 100    # 15 real × 5 = 75 synthetic → 90 total
-                            # Change to 20 for ~300 rows if needed
+# CONFIGURATION
+# Reduced to 720 hours (approx. 1 month) to keep file size manageable for local machines.
+# Change to 8760 if a full year is required.
+HOURS_TO_SIMULATE = 720 
 RANDOM_SEED = 42
-TARGET_PUE = 1.10
-
-df_real = pd.read_csv("data_centers_enriched.csv")
-print(f"Loaded {len(df_real)} enriched real rows.")
-
 np.random.seed(RANDOM_SEED)
 
-def recalculate(df):
-    """Recalculate all derived columns after noise is applied."""
-    df = df.copy()
-    df["Annual_Energy_MWh"] = (df["IT_Capacity_MW"] * 8760 * df["PUE"]).round(1)
-    df["Annual_CO2_tonnes"] = (
-        df["Annual_Energy_MWh"] * 1000 * df["Grid_Carbon_gCO2_kWh"] / 1_000_000
-    ).round(0)
-    df["CUE_kgCO2_per_kWh"] = (df["Grid_Carbon_gCO2_kWh"] / 1000).round(4)
-    df["Overhead_Ratio"] = (df["PUE"] - 1).round(3)
-    df["Potential_Energy_Saving_MWh"] = np.where(
-        df["PUE"] > TARGET_PUE,
-        (df["IT_Capacity_MW"] * 8760 * (df["PUE"] - TARGET_PUE)).round(1),
-        0
-    )
-    df["Potential_CO2_Saving_tonnes"] = (
-        df["Potential_Energy_Saving_MWh"] * 1000 *
-        df["Grid_Carbon_gCO2_kWh"] / 1_000_000
-    ).round(0)
-    return df
+def generate_dc_dataset():
+    # List of 15 real-world data center locations and their base configurations
+    dc_configs = [
+        {'Operator': 'Microsoft', 'Location': 'Gavle', 'Country': 'Sweden', 'Capacity_MW': 120.0, 'Cooling': 'Free'},
+        {'Operator': 'Microsoft', 'Location': 'Dublin', 'Country': 'Ireland', 'Capacity_MW': 105.0, 'Cooling': 'Chiller'},
+        {'Operator': 'Microsoft', 'Location': 'Middenmeer', 'Country': 'Netherlands', 'Capacity_MW': 70.0, 'Cooling': 'Chiller'},
+        {'Operator': 'Google', 'Location': 'Hamina', 'Country': 'Finland', 'Capacity_MW': 140.0, 'Cooling': 'Water'},
+        {'Operator': 'Google', 'Location': 'St. Ghislain', 'Country': 'Belgium', 'Capacity_MW': 95.0, 'Cooling': 'Water'},
+        {'Operator': 'Equinix', 'Location': 'Frankfurt', 'Country': 'Germany', 'Capacity_MW': 22.0, 'Cooling': 'Chiller'},
+        {'Operator': 'Equinix', 'Location': 'Warsaw', 'Country': 'Poland', 'Capacity_MW': 10.5, 'Cooling': 'Chiller'},
+        {'Operator': 'Equinix', 'Location': 'London', 'Country': 'UK', 'Capacity_MW': 32.0, 'Cooling': 'Chiller'},
+        {'Operator': 'OVHcloud', 'Location': 'Gravelines', 'Country': 'France', 'Capacity_MW': 38.0, 'Cooling': 'Water'},
+        {'Operator': 'Digital Realty', 'Location': 'Marseille', 'Country': 'France', 'Capacity_MW': 20.0, 'Cooling': 'Water'},
+        {'Operator': 'Meta', 'Location': 'Lulea', 'Country': 'Sweden', 'Capacity_MW': 115.0, 'Cooling': 'Free'},
+        {'Operator': 'Orange', 'Location': 'Val-de-Reuil', 'Country': 'France', 'Capacity_MW': 16.5, 'Cooling': 'Free'},
+        {'Operator': 'Interxion', 'Location': 'Amsterdam', 'Country': 'Netherlands', 'Capacity_MW': 13.0, 'Cooling': 'Chiller'},
+        {'Operator': 'Aruba.it', 'Location': 'Bergamo', 'Country': 'Italy', 'Capacity_MW': 58.0, 'Cooling': 'Chiller'},
+        {'Operator': 'Green Mountain', 'Location': 'Stavanger', 'Country': 'Norway', 'Capacity_MW': 24.0, 'Cooling': 'Water'}
+    ]
 
-synthetic_rows = []
+    all_data = []
 
-for _, row in df_real.iterrows():
-    for _ in range(N_SYNTHETIC_PER_ROW):
-        new_row = row.copy()
+    for dc in dc_configs:
+        # Define climate baseline based on geography
+        base_temp = 10 if dc['Country'] in ['Sweden', 'Finland', 'Norway'] else 18
+        
+        for h in range(HOURS_TO_SIMULATE):
+            hour_of_day = h % 24
+            
+            # 1. External Weather Simulation
+            ambient_temp = base_temp + 7 * np.sin(2 * np.pi * hour_of_day / 24) + np.random.normal(0, 2)
+            ambient_hum = 60 + 15 * np.cos(2 * np.pi * h / 168) + np.random.normal(0, 5)
 
-        # Add ±10-15% noise to raw input columns
-        new_row["IT_Capacity_MW"] = round(max(0.5,
-            row["IT_Capacity_MW"] * np.random.uniform(1.0, 0.2)
-        ), 1)
+            # 2. IT Workload Simulation
+            workload_factor = 0.3 + 0.6 * np.random.random()
+            it_load_kw = dc['Capacity_MW'] * 1000 * workload_factor
 
-        pue_noise = np.random.uniform(0.95, 1.05)
-        new_row["PUE"] = round(max(1.05, min(2.2,
-            row["PUE"] * pue_noise
-        )), 3)
-        new_row["WUE_L_kWh"] = round(max(0.01,
-            row["WUE_L_kWh"] * np.random.uniform(0.90, 1.10)
-        ), 3)
-        new_row["Grid_Carbon_gCO2_kWh"] = round(max(5,
-            row["Grid_Carbon_gCO2_kWh"] * np.random.uniform(0.95, 1.05)
-        ), 1)
+            # 3. Cooling Control Logic
+            chiller_status = 1 if (ambient_temp > 16 and "Free" not in dc['Cooling']) else 0
+            
+            # CHAOS FACTOR: Simulate a suboptimal cooling setting in 15% of cases for ML training
+            if np.random.random() < 0.15:
+                fan_speed_pct = np.random.uniform(15, 35) # Fans set too low for current load
+            else:
+                fan_speed_pct = (40 + (workload_factor * 40) + (max(0, ambient_temp - 15) * 2))
+            
+            fan_speed_pct = min(100, max(10, fan_speed_pct))
 
-        new_row["Status"] = "synthetic"
-        synthetic_rows.append(new_row)
+            # 4. Thermal Dynamics Simulation
+            cold_aisle_temp = 20.0 + np.random.normal(0, 0.5)
+            # Heat delta increases significantly if fan speed is insufficient for the IT load
+            delta_t = (it_load_kw / (dc['Capacity_MW'] * 1000)) * 25 * (100 / fan_speed_pct)
+            hot_aisle_temp = cold_aisle_temp + delta_t
+            rack_inlet_temp = cold_aisle_temp + (delta_t * 0.25)
 
-df_synthetic = pd.DataFrame(synthetic_rows)
-df_synthetic = recalculate(df_synthetic)
+            # 5. Power Consumption & Efficiency (PUE)
+            fan_power_kw = (fan_speed_pct**1.8) * 0.45
+            chiller_power_kw = (it_load_kw * 0.35) if chiller_status == 1 else (it_load_kw * 0.05)
+            hvac_power_kw = fan_power_kw + chiller_power_kw
+            pue = (it_load_kw + hvac_power_kw) / it_load_kw
 
-df_combined = pd.concat([df_real, df_synthetic], ignore_index=True)
-df_combined = df_combined.round(2)
-df_combined.to_csv("data_centers_ml_ready.csv", index=False)
+            # 6. ML Labelling Logic
+            if rack_inlet_temp > 27.5:
+                label = "CRITICAL_OVERHEAT"
+            elif pue > 1.45:
+                label = "INEFFICIENT_COOLING"
+            elif pue > 1.25:
+                label = "STABLE"
+            else:
+                label = "OPTIMAL"
 
-print(f"Generated {len(df_synthetic)} synthetic rows.")
-print(f"\n=== Final Dataset ===")
-print(f"Real rows     : {len(df_real)}")
-print(f"Synthetic rows: {len(df_synthetic)}")
-print(f"Total rows    : {len(df_combined)}")
-print(f"Columns       : {list(df_combined.columns)}")
-print(f"\nSaved to: data_centers_ml_ready.csv")
+            # Append structured row with all 14 requested columns
+            all_data.append({
+                "Timestamp_Hour": h,
+                "Operator": dc['Operator'],
+                "Location": dc['Location'],
+                "Ambient_Temp_C": round(ambient_temp, 1),
+                "Ambient_Hum_Pct": round(ambient_hum, 1),
+                "IT_Load_kW": round(it_load_kw, 2),
+                "Fan_Speed_Pct": round(fan_speed_pct, 1),
+                "Chiller_Status": chiller_status,
+                "Cold_Aisle_Temp": round(cold_aisle_temp, 1),
+                "Hot_Aisle_Temp": round(hot_aisle_temp, 1),
+                "Rack_Inlet_Temp": round(rack_inlet_temp, 1),
+                "HVAC_Power_kW": round(hvac_power_kw, 2),
+                "PUE": round(pue, 3),
+                "Efficiency_Label": label
+            })
+
+    return pd.DataFrame(all_data)
+
+# Execute Generation
+df = generate_dc_dataset()
+
+# Save to CSV
+output_file = "../cooling_data.csv"
+df.to_csv(output_file, index=False)

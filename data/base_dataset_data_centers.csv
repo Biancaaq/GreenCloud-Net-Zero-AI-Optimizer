@@ -1,0 +1,16 @@
+Operator,Location,Type,Cooling Equipment,Layout Type,Sensors (Rack/Room),Dew Point Target,Avg. IT Load (MW)
+Microsoft,"Gävle, SE",Hyperscale,Adiabatic + Free Cooling,Hot/Cold Aisle,4500+,12°C,120.0
+Microsoft,"Dublin, IE",Hyperscale,Air-Cooled Chillers,Containment,3200+,14°C,105.0
+Microsoft,"Middenmeer, NL",Hyperscale,Evaporative Cooling,Containment,2800+,13°C,70.0
+Google,"Hamina, FI",Hyperscale,Sea Water Cooling,Custom Heat Exch.,5000+,11°C,140.0
+Google,"St. Ghislain, BE",Hyperscale,Grey Water Evap.,Containment,4800+,13°C,95.0
+Equinix,"Frankfurt, DE",Colocation,Water-Cooled Chillers,Raised Floor,1500+,15°C,22.0
+Equinix,"Warsaw, PL",Colocation,DX (Direct Exp.),Raised Floor,800+,15°C,10.5
+Equinix,"London, UK",Colocation,Indirect Evap.,Hot Aisle Cont.,2200+,14°C,32.0
+OVHcloud,"Gravelines, FR",Cloud,Custom Water Blocks,Liquid-to-Chip,6000+,N/A,38.0
+Digital Realty,"Marseille, FR",Colocation,River Cooling,Raised Floor,1800+,14°C,20.0
+Meta,"Luleå, SE",Hyperscale,100% Outside Air,Penthouse Fan Wall,5500+,10°C,115.0
+Orange,"Val-de-Reuil, FR",Enterprise,Free Cooling,Hot/Cold Aisle,1200+,14°C,16.5
+Interxion,"Amsterdam, NL",Colocation,Aquifer Thermal St.,Raised Floor,2000+,14°C,13.0
+Aruba.it,"Bergamo, IT",Cloud,Geothermal/Ground,Containment,2500+,13°C,58.0
+Green Mountain,"Stavanger, NO",Hyperscale,Deep Sea Water,Custom Heat Exch.,3500+,11°C,24.0
