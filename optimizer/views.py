@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
+def home_view(request):
+    return render(request, 'home.html')
+
+def login_view(request):
+    return render(request, 'login.html')
+
 def map_view(request):
     # Date fictive pe care ulterior le vei înlocui cu rezultatul din ML
     context = {

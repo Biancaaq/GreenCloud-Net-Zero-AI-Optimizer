@@ -1,58 +1,62 @@
-{% load static %} <!-- This MUST be at the very top -->
-<!DOCTYPE html>
+{% load static %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}GreenCloud | Net Zero Optimizer{% endblock %}</title>
 
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap 5 CSS via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Our Custom External CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     {% block extra_head %}{% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <!-- The rest of your navbar and body content remains exactly the same... -->
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg py-3 shadow-sm">
+    <nav class="navbar navbar-expand-lg py-3 fixed-top navbar-glass">
         <div class="container">
-            <a class="navbar-brand" href="#">Green<span>Cloud</span></a>
+            <a class="navbar-brand brand-glow fw-bold tracking-tight" href="{% url 'home' %}">
+                Green<span class="text-eco-green">Cloud</span>
+            </a>
 
-            <!-- Custom toggler icon for dark mode -->
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="var(--text-main)" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="var(--text-light)" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
                 </svg>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Smart Placement</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Retrofit Simulator</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Leaderboard</a></li>
+                <ul class="navbar-nav mx-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link nav-link-animated active text-sm fw-semibold tracking-tight" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated text-sm fw-semibold tracking-tight" href="#">Solutions</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated text-sm fw-semibold tracking-tight" href="#">Infrastructure Map</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated text-sm fw-semibold tracking-tight" href="#">Global Impact</a></li>
                 </ul>
+
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                    <a href="{% url 'login' %}" class="nav-link text-sm fw-semibold tracking-tight d-none d-lg-block">Log In</a>
+
+                    <a href="{% url 'login' %}" class="btn btn-primary-custom btn-glow px-4 py-2 text-sm fw-semibold rounded-2 d-inline-flex align-items-center">
+                        Enterprise Portal
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="ms-2" viewBox="0 0 16 16">
+                            <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
+                            <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5z"/>
+                        </svg>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content Area -->
-    <main class="container my-5 flex-grow-1">
+    <main class="container pt-5 mt-5 mb-5 flex-grow-1">
         {% block content %}
-        <!-- Child templates will inject their content here -->
         {% endblock %}
     </main>
 
-    <!-- Footer -->
     <footer class="footer-custom mt-auto">
         <div class="container py-5">
             <div class="row gy-4">
@@ -69,11 +73,11 @@
 
                 <div class="col-lg-2 col-md-6">
                     <h6 class="text-white fw-bold mb-3 text-uppercase text-xs">Navigation</h6>
-                    <ul class="list-unstyled footer-links">
-                        <li><a href="#">Dashboard</a></li>
-                        <li><a href="#">Smart Placement</a></li>
-                        <li><a href="#">Retrofit Simulator</a></li>
-                        <li><a href="#">Leaderboard</a></li>
+                    <ul class="list-unstyled footer-links text-sm">
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="#">Solutions</a></li>
+                        <li><a href="#">Infrastructure Map</a></li>
+                        <li><a href="#">Global Impact</a></li>
                     </ul>
                 </div>
 
@@ -110,10 +114,8 @@
         </div>
     </footer>
 
-    <!-- Bootstrap 5 JS via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Block for extra scripts (e.g., Charts, Maps logic) -->
     {% block scripts %}{% endblock %}
 </body>
 </html>

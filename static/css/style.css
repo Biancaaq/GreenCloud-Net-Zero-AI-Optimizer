@@ -9,8 +9,10 @@
     --color-terracotta: #D5896F;
 
     /* Text Colors derived for contrast */
-    --text-light: #F8FAFC;    /* Almost white for main text */
-    --text-muted: #DAB785;    /* Using your Sand color for secondary text */
+    --text-light: #F8FAFC;
+    /* Almost white for main text */
+    --text-muted: #DAB785;
+    /* Using your Sand color for secondary text */
 }
 
 /* Global Reset & Body */
@@ -26,8 +28,21 @@ body {
 
 /* Navbar Styling */
 .navbar {
-    background-color: var(--color-surface) !important;
     border-bottom: 2px solid var(--color-eco-green);
+    transition: all 0.3s ease;
+}
+
+/* Glassmorphism for Navbar */
+.navbar-glass {
+    background: rgba(4, 57, 94, 0.85) !important;
+    /* Surface color with transparency */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(112, 162, 136, 0.4);
+}
+
+.brand-glow {
+    text-shadow: 0 0 12px rgba(112, 162, 136, 0.6);
 }
 
 .navbar-brand {
@@ -50,7 +65,31 @@ body {
     margin-left: 1rem;
 }
 
-.nav-link:hover, .nav-link.active {
+/* Animated Underline for Nav Links */
+.nav-link-animated {
+    position: relative;
+    display: inline-block;
+}
+
+.nav-link-animated::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 2px;
+    left: 1rem;
+    /* Offset for the margin-left */
+    background-color: var(--color-eco-green);
+    transition: width 0.3s ease;
+}
+
+.nav-link-animated:hover::after,
+.nav-link-animated.active::after {
+    width: calc(100% - 1rem);
+}
+
+.nav-link:hover,
+.nav-link.active {
     color: var(--color-eco-green) !important;
 }
 
@@ -69,10 +108,20 @@ body {
     transform: translateY(-2px);
 }
 
+/* Glow Effect for Buttons */
+.btn-glow {
+    box-shadow: 0 4px 15px rgba(112, 162, 136, 0.35);
+}
+
+.btn-glow:hover {
+    box-shadow: 0 6px 20px rgba(112, 162, 136, 0.55);
+}
+
 /* Cards & Surfaces (for your dashboard) */
 .custom-card {
     background-color: var(--color-surface);
-    border: 1px solid rgba(218, 183, 133, 0.2); /* Faint sand border */
+    border: 1px solid rgba(218, 183, 133, 0.2);
+    /* Faint sand border */
     border-radius: 8px;
     padding: 1.5rem;
     color: var(--text-light);
@@ -101,8 +150,13 @@ body {
 }
 
 @keyframes scanline {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(200%); }
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(200%);
+    }
 }
 
 /* Utilities for Footer Text */
@@ -116,7 +170,8 @@ body {
 }
 
 .footer-divider {
-    border-color: rgba(218, 183, 133, 0.1); /* Faint sand color for the line */
+    border-color: rgba(218, 183, 133, 0.1);
+    /* Faint sand color for the line */
 }
 
 /* 2. Hover Animations for Links */
@@ -138,7 +193,8 @@ body {
 
 .footer-links a:hover {
     color: var(--color-eco-green);
-    transform: translateX(6px); /* Glisează fin spre dreapta */
+    transform: translateX(6px);
+    /* Glisează fin spre dreapta */
 }
 
 /* 3. Pulsing ML Engine Indicator */
@@ -153,9 +209,17 @@ body {
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(112, 162, 136, 0.7); }
-    70% { box-shadow: 0 0 0 8px rgba(112, 162, 136, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(112, 162, 136, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(112, 162, 136, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(112, 162, 136, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(112, 162, 136, 0);
+    }
 }
 
 /* Custom Outlined Button for GitHub */
@@ -171,6 +235,20 @@ body {
     background-color: var(--color-eco-green);
     color: var(--color-bg-deep);
     border-color: var(--color-eco-green);
+}
+
+.btn-outline-sand {
+    color: var(--text-light);
+    border: 1px solid rgba(218, 183, 133, 0.4);
+    background-color: transparent;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-outline-sand:hover {
+    background-color: var(--color-sand);
+    color: var(--color-bg-deep);
+    border-color: var(--color-sand);
 }
 
 /* =========================================
@@ -201,4 +279,38 @@ body {
 .badge-eco {
     border-color: var(--color-eco-green) !important;
     background-color: var(--color-bg-deep);
+}
+
+/* Feature Cards Hover Effect */
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(218, 183, 133, 0.1);
+    /* Faint sand border */
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(112, 162, 136, 0.1);
+    border-color: rgba(112, 162, 136, 0.4);
+    /* Glows green on hover */
+}
+
+/* Color Utilities */
+.text-terracotta {
+    color: var(--color-terracotta) !important;
+}
+
+.bg-terracotta {
+    background-color: var(--color-terracotta) !important;
+}
+
+.bg-eco-green {
+    background-color: var(--color-eco-green) !important;
+}
+
+.progress-glass {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
 }

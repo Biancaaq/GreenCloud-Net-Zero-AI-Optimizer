@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Enterprise Login | GreenCloud{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100" style="margin-top: -80px; padding-top: 80px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10">
+
+                <div class="custom-card overflow-hidden" style="border-radius: 16px;">
+                    <div class="row g-0">
+
+                        <div class="col-lg-6 d-none d-lg-flex flex-column justify-content-between p-5" style="background: linear-gradient(135deg, rgba(4,57,94,1) 0%, rgba(3,29,68,1) 100%); border-right: 1px solid rgba(255,255,255,0.05);">
+                            <div>
+                                <h3 class="fw-bold text-white tracking-tight mb-4">Green<span class="text-eco-green">Cloud</span> Enterprise</h3>
+                                <p class="text-muted-custom text-md" style="line-height: 1.6;">
+                                    Access the machine learning optimizer to measure, manage, and drastically reduce your cloud infrastructure's carbon footprint.
+                                </p>
+                            </div>
+
+                            <div class="mt-5">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="p-2 rounded-circle" style="background-color: rgba(112, 162, 136, 0.2);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="var(--color-eco-green)" viewBox="0 0 16 16">
+                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm3.97-10.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-white text-sm fw-semibold">Zero-Trust Security Model</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="p-2 rounded-circle" style="background-color: rgba(112, 162, 136, 0.2);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="var(--color-eco-green)" viewBox="0 0 16 16">
+                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm3.97-10.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-white text-sm fw-semibold">Compliant with GHG Protocol</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 p-5">
+                            <div class="text-center mb-5">
+                                <h4 class="fw-bold text-white tracking-tight">Welcome Back</h4>
+                                <p class="text-muted-custom text-sm">Sign in to your organization's portal</p>
+                            </div>
+
+                            <button class="btn w-100 mb-4 d-flex align-items-center justify-content-center gap-2" style="background-color: #2F2F2F; color: white; border: 1px solid #444; padding: 12px; transition: all 0.2s;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 23 23">
+                                    <path fill="#f3f3f3" d="M0 0h11v11H0zM12 0h11v11H12zM0 12h11v11H0zM12 12h11v11H12z"/>
+                                </svg>
+                                <span class="text-sm fw-semibold tracking-tight">Sign in with Microsoft Entra ID</span>
+                            </button>
+
+                            <div class="d-flex align-items-center mb-4">
+                                <hr class="flex-grow-1" style="border-color: rgba(255,255,255,0.1);">
+                                <span class="px-3 text-muted-custom text-xs text-uppercase fw-semibold">or use tenant credentials</span>
+                                <hr class="flex-grow-1" style="border-color: rgba(255,255,255,0.1);">
+                            </div>
+
+                            <form action="/dashboard" method="GET">
+                                <div class="mb-4">
+                                    <label class="form-label text-white text-xs fw-semibold text-uppercase tracking-tight">Organization Email</label>
+                                    <input type="email" class="form-control" placeholder="admin@company.com" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px;" required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label text-white text-xs fw-semibold text-uppercase tracking-tight mb-0">Password</label>
+                                        <a href="#" class="text-eco-green text-xs text-decoration-none">Forgot?</a>
+                                    </div>
+                                    <input type="password" class="form-control mt-2" placeholder="••••••••" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px;" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary-custom btn-glow w-100 py-3 text-sm fw-semibold rounded-3 mt-2">
+                                    Access Portal
+                                </button>
+                            </form>
+
+                            <div class="text-center mt-4">
+                                <p class="text-muted-custom text-xs mb-0">Don't have an enterprise account? <a href="#" class="text-eco-green text-decoration-none fw-semibold">Contact Sales</a></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
