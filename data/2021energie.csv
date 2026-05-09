@@ -1,0 +1,43 @@
+id,status,status_text,judet,resedinta_de_judet,populatie,numarul_oraselor,pib_mlrd_ron,operator_distributie,consum_casnici_mwh,consum_noncasnici_mwh,prosumatori_total,capacitate_total_instalata_mw,productie_carbune_mw,productie_hidrocarburi_mw,productie_nucleara_mw,productie_hidro_mw,productie_fotovoltaic_mw,productie_eolian_mw,productie_biomasa__biogaz__deseuri_mw,productie_caldura_reziduala__geotermal_mw,productie_stocare_mw,productie_prosumatori_total_mw
+RO-AB,1,Enabled,Alba,Alba Iulia,  325 231.00,11,29.2,DEER,  218 893,  914 245,  3 791,   438.20,,,,   359.55,   10.31,   11.50,   11.27,,,   45.57
+RO-AG,1,Enabled,Argeș,Pitești,  565 223.00,7,47.8,DEO,  393 206, 1 022 760,  7 478,   689.85,,,,   562.25,   34.99,,   5.40,,,   87.21
+RO-AR,1,Enabled,Arad,Arad,  410 901.00,9,33.3,Rețele Electrice România,  320 121,  643 099,  7 152,   199.68,,   71.84,,   0.36,   45.57,,   1.62,,   2.00,   78.29
+RO-B,1,Enabled,București,București, 1 731 132.00,1,449.1,Rețele Electrice România, 1 678 549, 3 450 695,  5 367,   732.95,,   628.42,,,,   9.64,   2.40,,,   92.49
+RO-BC,1,Enabled,Bacău,Bacău,  598 867.00,8,34.8,Delgaz Grid,  322 993,  680 981,  3 932,   337.39,,   32.73,,   232.57,   17.97,   0.25,,,,   53.88
+RO-BH,1,Enabled,Bihor,Oradea,  552 373.00,10,40.4,DEER,  441 134, 1 068 100,  7 966,   594.00,,   191.00,,   232.19,   68.29,,   1.13,   4.15,,   97.24
+RO-BN,1,Enabled,Bistrița-Năsăud,Bistrița,  297 439.00,4,17.4,DEER,  182 292,  349 529,  2 685,   109.25,,,,   39.39,   28.27,   0.29,,,,   41.31
+RO-BR,1,Enabled,Brăila,Brăila,  277 963.00,4,18.6,DEER,  185 116,  466 147,  2 120,   140.12,,   1.84,,,   36.57,   73.29,,,,   28.42
+RO-BT,1,Enabled,Botoșani,Botoșani,  393 642.00,7,16.8,Delgaz Grid,  202 291,  208 212,  2 707,   57.75,,   8.80,,   20.20,   3.41,,,,,   25.34
+RO-BV,1,Enabled,Brașov,Brașov,  550 955.00,10,60.5,DEER,  397 485, 1 481 299,  4 877,   282.77,,   73.93,,   49.42,   101.40,,,,,   58.02
+RO-BZ,1,Enabled,Buzău,Buzău,  400 955.00,5,24.8,DEER,  257 037,  608 099,  3 801,   178.93,,   18.59,,   77.79,   9.85,   28.00,   2.26,,,   42.44
+RO-CJ,1,Enabled,Cluj,Cluj-Napoca,  685 920.00,7,94.4,DEER,  543 977, 1 258 575,  6 242,   580.53,,   35.18,,   309.89,   108.25,   0.29,   11.16,,   30.00,   85.77
+RO-CL,1,Enabled,Călărași,Călărași,  280 460.00,5,13.5,Rețele Electrice România,  202 101,  463 293,  2 748,   88.11,,   5.40,,,   51.63,,   0.64,,,   30.45
+RO-CS,1,Enabled,Caraș-Severin,Reșița,  245 107.00,8,17.6,Rețele Electrice România,  169 441,  368 201,  1 827,   307.91,,,,   223.07,   4.80,   59.10,,,,   20.95
+RO-CT,1,Enabled,Constanța,Constanța,  655 764.00,11,68.3,Rețele Electrice România,  532 548, 1 578 788,  5 655,  3 102.42,,,  1 413.00,   10.00,   14.22,  1 553.30,   0.12,,   37.20,   74.58
+RO-CV,1,Enabled,Covasna,Sfântu Gheorghe,  199 068.00,5,13.3,DEER,  130 154,  193 187,  2 383,   46.00,,   2.26,,,   6.54,,   15.00,,,   22.20
+RO-DB,1,Enabled,Dâmbovița,Târgoviște,  476 982.00,7,29.7,DEER,  326 109,  874 722,  4 092,   316.86,,   22.38,,   68.14,   148.39,,   0.50,,   30.00,   47.45
+RO-DJ,1,Enabled,Dolj,Craiova,  597 662.00,7,43.9,DEO,  397 337,  942 111,  7 822,   818.27,   615.00,   7.60,,,   104.98,,,,,   90.70
+RO-GJ,1,Enabled,Gorj,Târgu Jiu,  310 876.00,8,25.9,DEO,  214 756,  558 073,  3 111,  1 966.01,  1 655.50,,,   217.13,   49.55,,,,   1.00,   42.84
+RO-GL,1,Enabled,Galați,Galați,  494 419.00,4,29.9,DEER,  317 899,  466 094,  3 219,   252.75,,,,   40.00,   1.32,   177.10,,,,   34.33
+RO-GR,1,Enabled,Giurgiu,Giurgiu,  258 632.00,3,11.4,Rețele Electrice România,  242 117,  264 240,  3 037,   317.83,,   17.60,,   8.10,   250.59,,,,,   41.54
+RO-HD,1,Enabled,Hunedoara,Deva,  358 003.00,14,25.8,Rețele Electrice România,  241 239,  583 999,  3 887,   715.61,   150.00,,,   518.33,   3.38,,,,,   43.90
+RO-HR,1,Enabled,Harghita,Miercurea Ciuc,  290 530.00,9,19.3,DEER,  200 811,  313 730,  5 283,   79.80,,   4.00,,   11.91,   13.01,,   0.89,,,   49.99
+RO-IF,1,Enabled,Ilfov,Buftea,  555 302.00,8,48.7,Rețele Electrice România,  660 726, 1 409 087,  13 405,   211.00,,,,,   20.21,,,,   7.00,   183.80
+RO-IL,1,Enabled,Ialomița,Slobozia,  249 646.00,7,15,Rețele Electrice România,  167 359,  325 390,  3 187,   181.42,,,,   1.60,   15.60,   132.00,,,,   32.21
+RO-IS,1,Enabled,Iași,Iași,  773 079.00,5,62.1,Delgaz Grid,  465 451,  782 749,  6 709,   263.91,   100.00,   8.77,,   0.36,   5.02,   70.00,,,,   79.77
+RO-MH,1,Enabled,Mehedinți,Drobeta-Turnu Severin,  232 014.00,5,14,DEO,  172 197,  417 268,  2 895,  1 523.50,   22.00,,,  1 440.20,   31.16,,,,,   30.14
+RO-MM,1,Enabled,Maramureș,Baia Mare,  451 767.00,13,29.7,DEER,  300 659,  499 157,  4 145,   89.24,,,,   33.10,   9.61,,   0.37,,,   46.16
+RO-MS,1,Enabled,Mureș,Târgu Mureș,  517 668.00,11,38.8,DEER,  340 409,  940 616,  5 969,   473.07,,   306.00,,   7.24,   86.85,,,,,   72.98
+RO-NT,1,Enabled,Neamț,Piatra Neamț,  451 327.00,5,25,Delgaz Grid,  264 662,  527 612,  3 921,   390.70,,   14.00,,   315.30,   3.15,,   10.08,,,   48.17
+RO-OT,1,Enabled,Olt,Slatina,  378 731.00,8,21.8,DEO,  253 139,  609 889,  5 137,   524.21,,,,   390.54,   79.45,,   0.63,,,   53.59
+RO-PH,1,Enabled,Prahova,Ploiești,  690 312.00,14,65.1,DEER,  479 726, 1 367 631,  5 482,  1 545.46,,  1 201.42,,   110.22,   167.11,,   2.46,,,   64.26
+RO-SB,1,Enabled,Sibiu,Sibiu,  390 197.00,11,37.9,DEER,  296 752,  685 951,  5 730,   278.77,,   4.05,,   176.83,   41.49,,,,,   56.40
+RO-SJ,1,Enabled,Sălaj,Zalău,  210 576.00,4,15.6,DEER,  147 779,  384 373,  2 456,   41.87,,,,   0.58,   10.54,,,,,   30.76
+RO-SM,1,Enabled,Satu Mare,Satu Mare,  330 786.00,6,21.2,DEER,  234 309,  379 937,  4 718,   141.51,,,,   2.29,   80.75,,   3.44,,,   55.04
+RO-SV,1,Enabled,Suceava,Suceava,  644 120.00,16,31.9,Delgaz Grid,  409 954,  627 917,  7 055,   168.21,,   7.95,,   13.72,   0.50,   0.60,   62.37,,,   83.07
+RO-TL,1,Enabled,Tulcea,Tulcea,  191 753.00,5,13.9,Rețele Electrice România,  137 782,  240 986,  2 176,   873.74,,,,,   15.57,   835.75,   0.53,,,   21.90
+RO-TM,1,Enabled,Timiș,Timișoara,  656 554.00,10,82.4,Rețele Electrice România,  578 623, 1 494 378,  9 781,   212.82,   19.70,   7.50,,   2.59,   58.32,,   1.00,,,   123.71
+RO-TR,1,Enabled,Teleorman,Alexandria,  319 455.00,5,18.4,DEO,  218 491,  478 295,  3 114,   96.97,,,,,   63.21,,   0.75,,,   33.01
+RO-VL,1,Enabled,Vâlcea,Râmnicu Vâlcea,  340 725.00,11,24.3,DEO,  250 346,  692 281,  5 144,  1 434.56,   200.00,   30.80,,  1 125.60,   21.07,,,,,   57.09
+RO-VN,1,Enabled,Vrancea,Focșani,  333 823.00,5,17.7,DEER,  197 973,  317 327,  3 614,   105.84,,,,   34.54,   29.27,,   0.25,,,   41.78
+RO-VS,1,Enabled,Vaslui,Vaslui,  373 236.00,5,15.6,Delgaz Grid,  197 279,  204 626,  2 936,   118.94,,   11.75,,,   3.00,   73.85,   0.50,,,   29.84
