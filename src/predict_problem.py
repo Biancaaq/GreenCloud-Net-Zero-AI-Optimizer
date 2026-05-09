@@ -2,7 +2,7 @@ import pandas as pd
 import joblib
 
 
-MODEL_PATH = "models/cooling_classifier.pkl"
+MODEL_PATH = "data/models/cooling_classifier.pkl"
 
 
 def predict_problem(input_data: dict):

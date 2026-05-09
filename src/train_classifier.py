@@ -9,8 +9,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 
 
-DATASET_PATH = "data/cooling_dataset.csv"
-MODEL_PATH = "models/cooling_classifier.pkl"
+DATASET_PATH = "data/cooling_data.csv"
+MODEL_PATH = "data/models/cooling_classifier.pkl"
 
 TARGET = "Efficiency_Label"
 
@@ -19,12 +19,7 @@ NUMERIC_FEATURES = [
     "Ambient_Temp_C",
     "Ambient_Hum_Pct",
     "IT_Load_kW",
-    "Fan_Speed_Pct",
-    "Cold_Aisle_Temp",
-    "Hot_Aisle_Temp",
-    "Rack_Inlet_Temp",
-    "HVAC_Power_kW",
-    "PUE"
+    "Fan_Speed_Pct"
 ]
 
 CATEGORICAL_FEATURES = [
@@ -53,7 +48,8 @@ def main():
     )
 
     model = RandomForestClassifier(
-        n_estimators=200,
+        n_estimators=10,
+        max_depth=5,
         random_state=42,
         class_weight="balanced"
     )

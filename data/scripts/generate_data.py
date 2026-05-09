@@ -4,7 +4,7 @@ import numpy as np
 # CONFIGURATION
 # Reduced to 720 hours (approx. 1 month) to keep file size manageable for local machines.
 # Change to 8760 if a full year is required.
-HOURS_TO_SIMULATE = 720 
+HOURS_TO_SIMULATE = 1000 
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
@@ -38,43 +38,49 @@ def generate_dc_dataset():
             hour_of_day = h % 24
             
             # 1. External Weather Simulation
-            ambient_temp = base_temp + 7 * np.sin(2 * np.pi * hour_of_day / 24) + np.random.normal(0, 2)
-            ambient_hum = 60 + 15 * np.cos(2 * np.pi * h / 168) + np.random.normal(0, 5)
+            ambient_temp = base_temp + 7 * np.sin(2 * np.pi * hour_of_day / 24) + np.random.normal(0, 3.5)
+            ambient_hum = 60 + 15 * np.cos(2 * np.pi * h / 168) + np.random.normal(0, 6)
 
             # 2. IT Workload Simulation
-            workload_factor = 0.3 + 0.6 * np.random.random()
+            workload_factor = 0.25 + 0.65 * np.random.random()
             it_load_kw = dc['Capacity_MW'] * 1000 * workload_factor
 
             # 3. Cooling Control Logic
             chiller_status = 1 if (ambient_temp > 16 and "Free" not in dc['Cooling']) else 0
             
+            if np.random.random() < 0.04:
+                chiller_status = 0
+
             # CHAOS FACTOR: Simulate a suboptimal cooling setting in 15% of cases for ML training
             if np.random.random() < 0.15:
                 fan_speed_pct = np.random.uniform(15, 35) # Fans set too low for current load
             else:
-                fan_speed_pct = (40 + (workload_factor * 40) + (max(0, ambient_temp - 15) * 2))
+                fan_speed_pct = (38 + (workload_factor * 42) + (max(0, ambient_temp - 15) * 2.2))
             
-            fan_speed_pct = min(100, max(10, fan_speed_pct))
+            fan_speed_pct = min(100, max(8, fan_speed_pct))
 
             # 4. Thermal Dynamics Simulation
-            cold_aisle_temp = 20.0 + np.random.normal(0, 0.5)
+            dust_factor = np.random.uniform(1.0, 1.25)
+            cold_aisle_temp = 20.0 + np.random.normal(0, 0.8)
             # Heat delta increases significantly if fan speed is insufficient for the IT load
-            delta_t = (it_load_kw / (dc['Capacity_MW'] * 1000)) * 25 * (100 / fan_speed_pct)
+            delta_t = (it_load_kw / (dc['Capacity_MW'] * 1000)) * 24 * (100 / fan_speed_pct) * dust_factor
             hot_aisle_temp = cold_aisle_temp + delta_t
-            rack_inlet_temp = cold_aisle_temp + (delta_t * 0.25)
+            rack_inlet_temp = cold_aisle_temp + (delta_t * 0.27)
 
             # 5. Power Consumption & Efficiency (PUE)
-            fan_power_kw = (fan_speed_pct**1.8) * 0.45
-            chiller_power_kw = (it_load_kw * 0.35) if chiller_status == 1 else (it_load_kw * 0.05)
+            fan_power_kw = (fan_speed_pct**1.85) * 0.42
+            chiller_power_kw = (it_load_kw * 0.36) if chiller_status == 1 else (it_load_kw * 0.05)
             hvac_power_kw = fan_power_kw + chiller_power_kw
             pue = (it_load_kw + hvac_power_kw) / it_load_kw
 
+            fuzzy_offset = np.random.normal(0, 0.015)
+
             # 6. ML Labelling Logic
-            if rack_inlet_temp > 27.5:
+            if rack_inlet_temp + (fuzzy_offset * 50) > 27.8:
                 label = "CRITICAL_OVERHEAT"
-            elif pue > 1.45:
+            elif pue + fuzzy_offset > 1.46:
                 label = "INEFFICIENT_COOLING"
-            elif pue > 1.25:
+            elif pue + fuzzy_offset > 1.26:
                 label = "STABLE"
             else:
                 label = "OPTIMAL"

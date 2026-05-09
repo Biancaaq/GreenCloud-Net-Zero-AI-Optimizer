@@ -4,13 +4,12 @@ from predict_problem import predict_problem
 from rag_engine import RAGEngine
 from cost_analyzer import analyze_costs
 
-
-DATASET_PATH = "data/cooling_dataset.csv"
-
+# Configuration
+DATASET_PATH = "data/cooling_data.csv"
 
 def load_sample_from_dataset(row_index: int = 0):
+    """Loads a specific row from the CSV and prepares it for the AI pipeline."""
     df = pd.read_csv(DATASET_PATH)
-
     row = df.iloc[row_index]
 
     input_data = {
@@ -35,57 +34,74 @@ def load_sample_from_dataset(row_index: int = 0):
 
 
 def main():
-    input_data, real_label = load_sample_from_dataset(row_index=259)
-
-    prediction = predict_problem(input_data)
-
-    predicted_label = prediction["label"]
-    confidence = prediction["confidence"]
-
+    # Define three different indices to test various scenarios
+    test_indices = [10, 259, 500]
+    
+    # Initialize RAG Engine once outside the loop
     rag = RAGEngine()
-    solutions = rag.retrieve_solution(predicted_label, input_data)
 
-    solution = solutions[0]
+    for row_index in test_indices:
+        print("\n" + "="*60)
+        print(f" PROCESSING DATASET ROW INDEX: {row_index} ")
+        print("="*60)
 
-    cost_analysis = analyze_costs(input_data, solution)
+        # 1. Load data for the current sample
+        input_data, real_label = load_sample_from_dataset(row_index=row_index)
 
-    print("\n=== INPUT DATA ===")
-    for key, value in input_data.items():
-        print(f"{key}: {value}")
+        # 2. AI 1: Classification (Random Forest)
+        prediction = predict_problem(input_data)
+        predicted_label = prediction["label"]
+        confidence = prediction["confidence"]
 
-    print("\n=== AI 1: PROBLEM CLASSIFICATION ===")
-    print(f"Real dataset label: {real_label}")
-    print(f"Predicted label: {predicted_label}")
-    print(f"Model confidence: {confidence}")
+        # 3. AI 2: RAG Recommendation (Direct Lookup)
+        solutions = rag.retrieve_solution(predicted_label, input_data)
+        solution = solutions[0]
 
-    print("\n=== AI 2: RAG RECOMMENDATION ===")
-    print(f"Title: {solution['title']}")
-    print(f"Risk level: {solution['risk_level']}")
-    print(f"Description: {solution['content']}")
+        # 4. Cost and Sustainability Analysis
+        cost_analysis = analyze_costs(input_data, solution)
 
-    print("\nRecommended actions:")
-    for action in solution["recommended_actions"]:
-        print(f"- {action}")
+        # --- Display Results ---
+        print("\n=== INPUT DATA ===")
+        for key, value in input_data.items():
+            print(f"{key}: {value}")
 
-    print("\nExpected impact:")
-    print(solution["expected_impact"])
+        print("\n=== AI 1: PROBLEM CLASSIFICATION ===")
+        print(f"Real dataset label: {real_label}")
+        print(f"Predicted label: {predicted_label}")
+        print(f"Model confidence: {confidence}")
 
-    print("\n=== COST AND SUSTAINABILITY ANALYSIS ===")
-    print(f"Location: {cost_analysis['location']}")
-    print(f"Energy price: {cost_analysis['energy_price_eur_per_kwh']} EUR/kWh")
-    print(f"Carbon intensity: {cost_analysis['carbon_intensity_gco2_per_kwh']} gCO2/kWh")
+        print("\n=== AI 2: RAG RECOMMENDATION ===")
+        print(f"Title: {solution['title']}")
+        print(f"Risk level: {solution['risk_level']}")
+        print(f"Description: {solution['content']}")
 
-    print(f"Current hourly HVAC cost: {cost_analysis['current_hourly_cost_eur']} EUR")
-    print(f"Current monthly HVAC cost: {cost_analysis['current_monthly_cost_eur']} EUR")
+        print("\nRecommended actions:")
+        for action in solution["recommended_actions"]:
+            print(f"- {action}")
 
-    print(f"Optimized hourly HVAC cost: {cost_analysis['optimized_hourly_cost_eur']} EUR")
-    print(f"Optimized monthly HVAC cost: {cost_analysis['optimized_monthly_cost_eur']} EUR")
+        print("\nExpected impact:")
+        print(solution["expected_impact"])
 
-    print(f"Estimated saving percentage: {cost_analysis['estimated_saving_pct']}%")
-    print(f"Estimated monthly savings: {cost_analysis['estimated_monthly_saving_eur']} EUR")
+        print("\n=== COST AND SUSTAINABILITY ANALYSIS ===")
+        print(f"Location: {cost_analysis['location']}")
+        print(f"Energy price: {cost_analysis['energy_price_eur_per_kwh']} EUR/kWh")
+        print(f"Carbon intensity: {cost_analysis['carbon_intensity_gco2_per_kwh']} gCO2/kWh")
 
-    print(f"Current monthly CO2 emissions: {cost_analysis['current_monthly_co2_kg']} kg")
-    print(f"Estimated monthly CO2 reduction: {cost_analysis['estimated_monthly_co2_reduction_kg']} kg")
+        print(f"Current hourly HVAC cost: {cost_analysis['current_hourly_cost_eur']} EUR")
+        print(f"Current monthly HVAC cost: {cost_analysis['current_monthly_cost_eur']} EUR")
+
+        print(f"Optimized hourly HVAC cost: {cost_analysis['optimized_hourly_cost_eur']} EUR")
+        print(f"Optimized monthly HVAC cost: {cost_analysis['optimized_monthly_cost_eur']} EUR")
+
+        print(f"Estimated saving percentage: {cost_analysis['estimated_saving_pct']}%")
+        print(f"Estimated monthly savings: {cost_analysis['estimated_monthly_saving_eur']} EUR")
+
+        print(f"Current monthly CO2 emissions: {cost_analysis['current_monthly_co2_kg']} kg")
+        print(f"Estimated monthly CO2 reduction: {cost_analysis['estimated_monthly_co2_reduction_kg']} kg")
+
+    print("\n" + "="*60)
+    print(" PIPELINE EXECUTION FINISHED ")
+    print("="*60)
 
 
 if __name__ == "__main__":
