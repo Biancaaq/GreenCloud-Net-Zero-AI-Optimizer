@@ -1,6 +1,9 @@
 import pandas as pd
+import math
 from pathlib import Path
 from shapely.geometry import Point, Polygon, LineString
+from shapely.ops import nearest_points
+from typing import List, Dict, Union, Any
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -37,52 +40,101 @@ WATER_WAYS = {
     "Siret": LineString([(47.9, 26.0), (46.5, 26.9), (45.4, 28.0)])
 }
 
+
+class MissingDataException(Exception):
+    """Raised when required datasets are not found."""
+    pass
+
+
 class AnalysisEngine:
+    _cached_df: pd.DataFrame = None
+
     @staticmethod
-    def normalize(series, reverse=False):
+    def normalize(series: pd.Series, reverse: bool = False) -> pd.Series:
         min_v, max_v = series.min(), series.max()
-        if max_v == min_v: return series.apply(lambda x: 100.0)
+        if max_v == min_v: 
+            return series.apply(lambda x: 100.0)
         norm = (series - min_v) / (max_v - min_v) * 100
         return 100 - norm if reverse else norm
 
     @staticmethod
-    def get_distance_to_water(lat, lon):
-        p = Point(lat, lon)
-        return min([p.distance(line) * 111 for line in WATER_WAYS.values()])
+    def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+        """Calculate the great-circle distance between two points on the Earth surface in km."""
+        R = 6371.0 # Earth radius in kilometers
+        dlat = math.radians(lat2 - lat1)
+        dlon = math.radians(lon2 - lon1)
+        a = math.sin(dlat / 2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
+        return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
     @classmethod
-    def adjust_geospatial_metrics(cls, row):
-        lat, lon = CITY_GPS.get(row['county'], (45.0, 25.0))
+    def get_distance_to_water(cls, lat: float, lon: float) -> float:
         p = Point(lat, lon)
-        mountain_mult = 1.8 if CARPATHIANS_SHAPE.contains(p) else 1.0
-        adj_price = row['average_price_sqm'] * mountain_mult
-        dist = cls.get_distance_to_water(lat, lon)
-        water_bonus = 0.80 if dist < 20 else 1.0
-        adj_water = row['water_price'] * water_bonus
-        return pd.Series([adj_price, adj_water])
+        distances = []
+        for line in WATER_WAYS.values():
+            closest_pt = nearest_points(p, line)[1]
+            dist = cls.haversine_distance(lat, lon, closest_pt.x, closest_pt.y)
+            distances.append(dist)
+        return min(distances)
 
     @classmethod
-    def process_ranking(cls, weights):
-        """
-        Calculates top locations based on provided weights.
-        :param weights: dict containing land, water, climate, green, capacity, gdp weights
-        :return: list of top 3 counties with their scores and box coordinates
-        """
+    def load_and_cache_data(cls) -> pd.DataFrame:
+        if cls._cached_df is not None:
+            return cls._cached_df.copy()
+
         path1 = BASE_DIR / "dataset1.csv"
         path2 = BASE_DIR / "dataset2.csv"
         if not path1.exists() or not path2.exists():
-            return {"error": "Datasets missing in services folder"}
+            raise MissingDataException("Datasets missing in services folder")
+        
         df1 = pd.read_csv(path1)
         df2 = pd.read_csv(path2)
-        df = pd.merge(df1, df2.fillna(0), left_on='county', right_on='judet', how='inner')
-        df['gdp_per_capita'] = (df['pib_mlrdron'] * 1000) / df['population'].replace(0, 1)
-        df[['adj_land', 'adj_water']] = df.apply(cls.adjust_geospatial_metrics, axis=1)
+        
+        # ETL Phase: Standardize column names before merge
+        df2 = df2.rename(columns={'judet': 'county'})
+        df = pd.merge(df1, df2.fillna(0), on='county', how='inner')
+        df = df.rename(columns={
+            'pib_mlrdron': 'gdp_billion_ron',
+            'capacitate_total_instalata_mw': 'total_installed_capacity_mw'
+        })
+        
+        # Calculate base metrics
+        df['gdp_per_capita'] = (df['gdp_billion_ron'] * 1000) / df['population'].replace(0, 1)
+
+        # Pre-compute expensive geospatial metrics to avoid per-request calculation
+        def compute_geo_modifiers(row):
+            lat, lon = CITY_GPS.get(row['county'], (45.0, 25.0))
+            p = Point(lat, lon)
+            mountain_mult = 1.8 if CARPATHIANS_SHAPE.contains(p) else 1.0
+            dist = cls.get_distance_to_water(lat, lon)
+            water_bonus = 0.80 if dist < 20 else 1.0
+            return pd.Series([
+                row['average_price_sqm'] * mountain_mult, 
+                row['water_price'] * water_bonus
+            ])
+
+        df[['adj_land', 'adj_water']] = df.apply(compute_geo_modifiers, axis=1)
+
+        # Pre-calculate normalized base metrics (since they don't depend on user weights)
         df['n1'] = cls.normalize(df['adj_land'], reverse=True)
         df['n2'] = cls.normalize(df['adj_water'], reverse=True)
         df['n3'] = cls.normalize(df['avg_temp'], reverse=True)
         df['n4'] = cls.normalize(df['green_energy'], reverse=True)
-        df['n5'] = cls.normalize(df['capacitate_total_instalata_mw'])
+        df['n5'] = cls.normalize(df['total_installed_capacity_mw'])
         df['n6'] = cls.normalize(df['gdp_per_capita'])
+
+        cls._cached_df = df
+        return cls._cached_df.copy()
+
+    @classmethod
+    def process_ranking(cls, weights: Dict[str, float]) -> List[Dict[str, Any]]:
+        """
+        Calculates top locations based on provided user weights.
+        :param weights: dict containing land, water, climate, green, capacity, gdp weights
+        :return: list of top 3 counties with their scores and box coordinates
+        """
+        df = cls.load_and_cache_data()
+
+        # Vectorized scoring using pre-normalized columns
         df['score'] = (
             df['n1'] * weights.get('land', 0.05) +
             df['n2'] * weights.get('water', 0.05) +
@@ -91,6 +143,7 @@ class AnalysisEngine:
             df['n5'] * weights.get('capacity', 0.5) +
             df['n6'] * weights.get('gdp', 0.1)
         )
+
         top_df = df.sort_values(by='score', ascending=False).head(3)
         results = []
         for i, row in enumerate(top_df.itertuples()):

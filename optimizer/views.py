@@ -1,59 +1,67 @@
+# pyrefly: ignore [missing-import]
 from django.shortcuts import render
-from django.http import JsonResponse
-import folium
+# pyrefly: ignore [missing-import]
+from django.http import JsonResponse, HttpRequest, HttpResponse
+import pandas as pd
 
-def home_view(request):
+from optimizer.services import AnalysisEngine, MissingDataException
+from optimizer.map_builder import generate_infrastructure_map_html, get_fallback_map_html
+
+def home_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'home.html')
 
-def login_view(request):
+def login_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'login.html')
 
-def infrastructure_map_view(request):
-    # Inițializăm harta
-    m = folium.Map(
-        location=[44.6, 26.5], # Centrat mai jos pentru vizibilitate
-        zoom_start=8,
-        tiles="CartoDB dark_matter",
-        control_scale=True
-    )
+def infrastructure_map_view(request: HttpRequest) -> HttpResponse:
+    # Parse weights from GET request or use defaults
+    weights_input = {
+        'weight_land_price': int(request.GET.get('weight_land_price', 20)),
+        'weight_water_utilities': int(request.GET.get('weight_water_utilities', 20)),
+        'weight_climate': int(request.GET.get('weight_climate', 20)),
+        'weight_energy_price': int(request.GET.get('weight_energy_price', 20)),
+        'weight_energy_capacity': int(request.GET.get('weight_energy_capacity', 10)),
+        'weight_regional_economy': int(request.GET.get('weight_regional_economy', 10)),
+    }
 
-    # Coordonatele centrale ale ariei returnate de modelul ML
-    ai_lat, ai_lon = 44.35, 27.05 # Ex: Câmpia Bărăganului
+    # Map inputs to AnalysisEngine expected keys
+    ml_weights = {
+        'land': weights_input['weight_land_price'] / 100.0,
+        'water': weights_input['weight_water_utilities'] / 100.0,
+        'climate': weights_input['weight_climate'] / 100.0,
+        'green': weights_input['weight_energy_price'] / 100.0,
+        'capacity': weights_input['weight_energy_capacity'] / 100.0,
+        'gdp': weights_input['weight_regional_economy'] / 100.0
+    }
 
-    # 1. Stratul exterior (mai transparent, rază mare)
-    folium.Circle(
-        location=[ai_lat, ai_lon],
-        radius=40000, # 40 km rază
-        color=None,   # Fără margine pentru un look organic (heatmap)
-        fill=True,
-        fill_color='#70A288', # Verdele vostru Eco
-        fill_opacity=0.15     # Foarte transparent
-    ).add_to(m)
+    try:
+        results = AnalysisEngine.process_ranking(ml_weights)
+        if results:
+            map_html = generate_infrastructure_map_html(results)
+            df_results = pd.DataFrame([{
+                "Rank": f"#{r['rank']}",
+                "Region Node": r["county"],
+                "Grid Score": f"{r['score']}%",
+                "Lat / Lon": f"{r['center'][0]:.2f}, {r['center'][1]:.2f}"
+            } for r in results])
+        else:
+            df_results = pd.DataFrame([{"Info": "No optimal regions found for given parameters."}])
+            map_html = get_fallback_map_html()
+            
+    except MissingDataException as e:
+        df_results = pd.DataFrame([{"Error": str(e)}])
+        map_html = get_fallback_map_html()
 
-    # 2. Stratul interior (mai intens, rază mică - nucleul ariei)
-    folium.Circle(
-        location=[ai_lat, ai_lon],
-        radius=18000, # 18 km rază
-        color=None,
-        fill=True,
-        fill_color='#50886c', # Un verde ușor mai intens
-        fill_opacity=0.4
-    ).add_to(m)
+    html_tables = df_results.to_html(classes="table table-dark table-hover table-borderless text-sm mb-0", index=False)
 
-    # 3. Markerul discret în centru pentru interactivitate cu panoul din dreapta
-    # Folosim o iconiță minimalistă
-    folium.Marker(
-        location=[ai_lat, ai_lon],
-        tooltip="<span style='color: #04395E; font-weight: bold;'>Bărăgan Solar Cluster</span><br>Click for ML Insights",
-        icon=folium.Icon(color='green', icon='bolt', prefix='fa')
-    ).add_to(m)
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'map_html': map_html,
+            'dataframes_html': html_tables
+        })
 
-    # Convertim harta în HTML
-    map_html = m._repr_html_()
-
-    return render(request, 'infrastructure_map.html', {'map_html': map_html})
-
-def api_date_harta(request):
-    # Aici vei apela modelul de ML pentru a obține coordonatele
-    date = {"lat": 44.4, "lng": 26.1, "scor_verde": 85}
-    return JsonResponse(date)
+    return render(request, 'infrastructure_map.html', {
+        'map_html': map_html,
+        'dataframes_html': html_tables,
+        'weights': weights_input
+    })

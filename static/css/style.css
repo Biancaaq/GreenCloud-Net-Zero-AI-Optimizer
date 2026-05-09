@@ -341,3 +341,70 @@ body {
     transform: scale(1.2);
     background: #fff;
 }
+
+/* Custom Scrollbar for Data Tables */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(112, 162, 136, 0.3);
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(112, 162, 136, 0.6);
+}
+
+/* Stiluri pentru tabelele Pandas injectate automat */
+.dataframe {
+    width: 100%;
+    color: white;
+    font-size: 0.875rem;
+    text-align: left;
+}
+
+.dataframe th {
+    color: var(--color-eco-green);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+}
+
+.dataframe td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* =========================================
+   DASHBOARD SPECIFIC CLASSES
+   ========================================= */
+
+.dashboard-map-card {
+    border-radius: 12px;
+    min-height: 650px;
+    border: 1px solid rgba(112, 162, 136, 0.3);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 991px) {
+    .dashboard-map-card {
+        min-height: 400px;
+    }
+}
+
+.dashboard-weights-card {
+    border-radius: 12px; 
+    border: 1px solid rgba(218, 183, 133, 0.2);
+}
+
+.insights-card {
+    border-radius: 12px;
+    border: 1px solid rgba(112, 162, 136, 0.2);
+    background: linear-gradient(145deg, rgba(4, 57, 94, 0.5), rgba(3, 29, 68, 0.5));
+}
