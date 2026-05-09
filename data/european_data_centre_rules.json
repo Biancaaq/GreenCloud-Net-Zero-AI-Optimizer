@@ -1,0 +1,1059 @@
+{
+  "metadata": {
+    "project": "Sustainable Data Centre Placement and Retrofit - Europe",
+    "version": "1.2",
+    "principle": "Do not optimize for company profit. Optimize for minimum ecological damage, grid safety, water safety and regulatory compliance.",
+    "last_updated": "2026-05-09",
+    "data_quality_note": "Only confirmed rules/restrictions are encoded as hard constraints. Unknown local rules are marked as research_required. Some environmental flags are modelling checks, not legal restrictions."
+  },
+  "eu_rules": {
+    "scope": "EU",
+    "data_centre_reporting": {
+      "legal_basis": [
+        "Energy Efficiency Directive EU/2023/1791",
+        "Commission Delegated Regulation EU/2024/1364"
+      ],
+      "applies_to": "data centres with installed IT power demand of at least 500 kW",
+      "required_kpis": [
+        "PUE",
+        "WUE",
+        "ERF",
+        "REF"
+      ],
+      "required_reported_data": [
+        "energy_consumption",
+        "water_footprint",
+        "renewable_energy_use"
+      ],
+      "rule_type": "mandatory_reporting",
+      "use_in_code": [
+        "existing_data_centre_assessment",
+        "new_data_centre_compliance_check"
+      ],
+      "source_urls": [
+        "https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficiency-targets-directive-and-rules/energy-efficiency-directive/energy-performance-data-centres_en",
+        "https://eur-lex.europa.eu/eli/reg_del/2024/1364/oj/eng"
+      ]
+    },
+    "best_practice_framework": {
+      "name": "EU Code of Conduct for Data Centre Energy Efficiency - Best Practices 2024",
+      "rule_type": "best_practice_guidance",
+      "retrofit_relevance": [
+        "cooling_optimization",
+        "airflow_management",
+        "IT_equipment_utilization",
+        "power_distribution_efficiency",
+        "energy_monitoring"
+      ],
+      "source_urls": [
+        "https://e3p.jrc.ec.europa.eu/publications/2024-best-practice-guidelines-eu-code-conduct-data-centre-energy-efficiency",
+        "https://e3p.jrc.ec.europa.eu/sites/default/files/2024-04/JRC136986_2024_best_practice_guidelines.pdf"
+      ]
+    }
+  },
+  "countries": {
+    "Ireland": {
+      "eu_member": true,
+      "risk_level": "high",
+      "new_data_centres": {
+        "grid_connection_policy_specific_to_data_centres": true,
+        "applies_to": "new data centre connection applications under the CRU Large Energy Users Connection Policy after 12 December 2025",
+        "requires_new_renewable_generation": true,
+        "requires_dispatchable_generation": true,
+        "constrained_region_check_required": true,
+        "recommendation": "Do not recommend new data centres unless renewable generation, dispatchable capacity and grid constraints are addressed."
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "reduce_grid_pressure",
+          "increase_renewable_supply",
+          "improve_energy_monitoring",
+          "reduce_peak_demand"
+        ]
+      },
+      "source_urls": [
+        "https://www.cru.ie/about-us/news/the-cru-publishes-its-decision-on-new-electricity-connection-policy-for-data-centres/",
+        "https://cruie-live-96ca64acab2247eca8a850a7e54b-5b34f62.divio-media.com/documents/CRU2025236_Large_Energy_User_connection_policy_decision_paper.pdf"
+      ]
+    },
+    "Netherlands": {
+      "eu_member": true,
+      "risk_level": "high",
+      "new_data_centres": {
+        "hyperscale_restrictions": true,
+        "hyperscale_definition_reference": "approximately 10 hectares or 70 MW threshold used in Dutch hyperscale restrictions",
+        "restricted_default": true,
+        "known_exceptions": [
+          "Het Hogeland",
+          "Hollands Kroon"
+        ],
+        "recommendation": "Reject or heavily penalize hyperscale projects outside explicitly permitted zones."
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "reduce_grid_pressure",
+          "improve_energy_efficiency",
+          "heat_reuse_where_possible"
+        ]
+      },
+      "source_urls": [
+        "https://www.dcbyte.com/market/amsterdam/",
+        "https://www.dlapiper.com/insights/publications/real-estate-gazette/real-estate-gazette-data-centers/data-centers-in-the-netherlands-a-shifting-landscape"
+      ]
+    },
+    "Germany": {
+      "eu_member": true,
+      "risk_level": "medium",
+      "new_data_centres": {
+        "energy_efficiency_act_specific_rules": true,
+        "pue_requirements": true,
+        "renewable_electricity_requirements": true,
+        "waste_heat_reuse_requirements": true,
+        "energy_or_environmental_management_required": true,
+        "recommendation": "Recommend only if PUE, renewable electricity, waste heat reuse and management-system requirements are satisfied."
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "PUE_reduction",
+          "waste_heat_reuse",
+          "renewable_electricity_transition",
+          "energy_management_system"
+        ]
+      },
+      "source_urls": [
+        "https://www.whitecase.com/insight-alert/data-center-requirements-under-new-german-energy-efficiency-act",
+        "https://www.twobirds.com/en/insights/2024/germany/rechenzentren-und-abwaerme-ein-ueberblick-ueber-die-gesetzlichen-vorgaben-zur-abwaermenutzung"
+      ]
+    },
+    "France": {
+      "eu_member": true,
+      "risk_level": "medium",
+      "new_data_centres": {
+        "data_centre_energy_code_framework": true,
+        "environmental_permit_possible": true,
+        "icpe_permit_possible": true,
+        "energy_efficiency_reporting": true,
+        "water_consumption_reporting": true,
+        "recommendation": "Require environmental-permit check, energy reporting check, water-impact check and waste-heat potential check."
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "energy_efficiency_reporting",
+          "water_consumption_reduction",
+          "waste_heat_recovery",
+          "environmental_compliance"
+        ]
+      },
+      "source_urls": [
+        "https://www.fieldfisher.com/en/locations/france/insights/ia-et-environnement-quelles-perspectives-pour-les",
+        "https://www.bracewell.com/resources/building-data-centers-in-france-navigating-regulatory-hurdles-and-unlocking-growth/"
+      ]
+    },
+    "Denmark": {
+      "eu_member": true,
+      "risk_level": "medium_to_high",
+      "new_data_centres": {
+        "temporary_grid_connection_pause": {
+          "active_as_of": "2026-05-09",
+          "temporary": true,
+          "applies_to": "new large grid connection agreements",
+          "note": "Projects with already signed grid connection agreements are not affected."
+        },
+        "large_connection_delay_risk": true,
+        "grid_capacity_check_required": true,
+        "recommendation": "Do not recommend new large-load projects during grid-connection pause or without grid-capacity confirmation."
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "reduce_peak_grid_demand",
+          "use_district_heating_potential",
+          "increase_flexibility"
+        ]
+      },
+      "source_urls": [
+        "https://en.energinet.dk/about-our-news/news/2026/temporary-pause/",
+        "https://www.datacenterdynamics.com/en/news/danish-grid-operator-introduces-three-month-moratorium-for-new-grid-connections/"
+      ]
+    },
+    "Sweden": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "local_grid_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "heat_reuse_where_possible"
+        ]
+      }
+    },
+    "Finland": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "local_grid_check_required": true,
+        "district_heating_potential_check": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "heat_reuse",
+          "EU_reporting_compliance",
+          "PUE_reduction"
+        ]
+      }
+    },
+    "Spain": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "environmental_flags": [
+        "water_sensitive"
+      ],
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "water_stress_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "water_consumption_reduction",
+          "cooling_optimization",
+          "EU_reporting_compliance"
+        ]
+      }
+    },
+    "Portugal": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "environmental_flags": [
+        "water_sensitive"
+      ],
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "water_stress_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "water_consumption_reduction",
+          "cooling_optimization",
+          "EU_reporting_compliance"
+        ]
+      }
+    },
+    "Italy": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "environmental_flags": [
+        "water_sensitive"
+      ],
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "local_grid_check_required": true,
+        "water_stress_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "water_consumption_reduction"
+        ]
+      }
+    },
+    "Poland": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "carbon_intensity_check_required": true,
+        "local_grid_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "renewable_electricity_transition",
+          "PUE_reduction",
+          "EU_reporting_compliance"
+        ]
+      }
+    },
+    "Belgium": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "heat_reuse_where_possible"
+        ]
+      }
+    },
+    "Austria": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "local_grid_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction"
+        ]
+      }
+    },
+    "Czechia": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "local_grid_check_required": true,
+        "carbon_intensity_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "renewable_electricity_transition",
+          "PUE_reduction"
+        ]
+      }
+    },
+    "Romania": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true,
+        "water_stress_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "WUE_monitoring",
+          "renewable_electricity_transition",
+          "energy_monitoring"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Bulgaria": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "renewable_electricity_transition",
+          "energy_monitoring"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Greece": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "environmental_flags": [
+        "water_sensitive"
+      ],
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "water_stress_check_required": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "water_consumption_reduction",
+          "cooling_optimization",
+          "PUE_reduction"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Hungary": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "renewable_electricity_transition",
+          "energy_monitoring"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Slovakia": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "energy_monitoring"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Slovenia": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "energy_monitoring"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Croatia": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "environmental_flags": [
+        "water_sensitive"
+      ],
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "water_stress_check_required": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "water_consumption_reduction",
+          "cooling_optimization",
+          "PUE_reduction"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Estonia": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "renewable_electricity_transition",
+          "heat_reuse_where_possible"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Latvia": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "heat_reuse_where_possible"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Lithuania": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "heat_reuse_where_possible"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Luxembourg": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "PUE_reduction",
+          "energy_monitoring"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Malta": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "environmental_flags": [
+        "water_sensitive"
+      ],
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "water_stress_check_required": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "water_consumption_reduction",
+          "cooling_optimization",
+          "PUE_reduction"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Cyprus": {
+      "eu_member": true,
+      "risk_level": "research_required",
+      "environmental_flags": [
+        "water_sensitive"
+      ],
+      "new_data_centres": {
+        "country_specific_data_centre_restriction_confirmed": false,
+        "eu_data_centre_reporting_applies_if_it_power_above_500kw": true,
+        "water_stress_check_required": true,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "EU_reporting_compliance",
+          "water_consumption_reduction",
+          "cooling_optimization",
+          "PUE_reduction"
+        ]
+      },
+      "source_urls": [
+        "https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        "https://energy.ec.europa.eu/resources/preparatory-studies/minimum-performance-standards-eu-data-centres_en"
+      ]
+    },
+    "Norway": {
+      "eu_member": false,
+      "eea_country": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "eu_2024_1364_direct_application": false,
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "PUE_reduction",
+          "heat_reuse_where_possible",
+          "local_compliance_check"
+        ]
+      }
+    },
+    "Switzerland": {
+      "eu_member": false,
+      "eea_country": false,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "eu_2024_1364_direct_application": false,
+        "local_grid_check_required": true,
+        "local_environmental_rules_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "PUE_reduction",
+          "heat_reuse_where_possible",
+          "local_compliance_check"
+        ]
+      }
+    },
+    "United Kingdom": {
+      "eu_member": false,
+      "eea_country": false,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "eu_2024_1364_direct_application": false,
+        "local_grid_check_required": true,
+        "planning_permission_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "PUE_reduction",
+          "renewable_electricity_transition",
+          "water_consumption_reduction"
+        ]
+      }
+    },
+    "Iceland": {
+      "eu_member": false,
+      "eea_country": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "eu_2024_1364_direct_application": "research_required",
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "PUE_reduction",
+          "heat_reuse_where_possible",
+          "local_compliance_check"
+        ]
+      },
+      "source_urls": [
+        "https://www.efta.int/eea"
+      ]
+    },
+    "Liechtenstein": {
+      "eu_member": false,
+      "eea_country": true,
+      "risk_level": "research_required",
+      "new_data_centres": {
+        "eu_2024_1364_direct_application": "research_required",
+        "local_grid_check_required": true,
+        "environmental_permit_check_required": true
+      },
+      "existing_data_centres": {
+        "retrofit_priorities": [
+          "PUE_reduction",
+          "local_compliance_check"
+        ]
+      },
+      "source_urls": [
+        "https://www.efta.int/eea"
+      ]
+    }
+  },
+  "important_locations": {
+    "IE_DUBLIN": {
+      "country": "Ireland",
+      "city_or_region": "Dublin",
+      "type": "major_data_centre_region",
+      "confirmed_constraints": [
+        "grid_capacity_pressure",
+        "connection_policy_requires_renewable_and_dispatchable_generation"
+      ],
+      "new_data_centre_decision": "penalize_or_reject_without_grid_and_generation_plan",
+      "existing_data_centre_action": [
+        "reduce_peak_demand",
+        "improve_energy_efficiency",
+        "increase_renewable_supply"
+      ]
+    },
+    "NL_AMSTERDAM": {
+      "country": "Netherlands",
+      "city_or_region": "Amsterdam",
+      "type": "major_data_centre_region",
+      "confirmed_constraints": [
+        "hyperscale_restrictions",
+        "grid_pressure",
+        "land_use_pressure"
+      ],
+      "new_data_centre_decision": "avoid_new_hyperscale",
+      "existing_data_centre_action": [
+        "reduce_grid_pressure",
+        "improve_efficiency",
+        "assess_heat_reuse"
+      ]
+    },
+    "NL_HET_HOGELAND": {
+      "country": "Netherlands",
+      "city_or_region": "Het Hogeland",
+      "type": "exception_zone",
+      "confirmed_constraints": [
+        "listed_as_exception_to_dutch_hyperscale_restrictions"
+      ],
+      "new_data_centre_decision": "not_automatically_rejected_but_requires_local_grid_and_environmental_check"
+    },
+    "NL_HOLLANDS_KROON": {
+      "country": "Netherlands",
+      "city_or_region": "Hollands Kroon",
+      "type": "exception_zone",
+      "confirmed_constraints": [
+        "listed_as_exception_to_dutch_hyperscale_restrictions"
+      ],
+      "new_data_centre_decision": "not_automatically_rejected_but_requires_local_grid_and_environmental_check"
+    },
+    "DE_FRANKFURT": {
+      "country": "Germany",
+      "city_or_region": "Frankfurt",
+      "type": "major_data_centre_hub",
+      "confirmed_constraints": [
+        "national_energy_efficiency_act_applies",
+        "waste_heat_reuse_requirements",
+        "renewable_electricity_requirements",
+        "PUE_requirements"
+      ],
+      "new_data_centre_decision": "allow_only_if_german_efficiency_and_heat_reuse_requirements_are_met",
+      "existing_data_centre_action": [
+        "PUE_reduction",
+        "heat_reuse_plan",
+        "energy_management_system"
+      ]
+    },
+    "FR_PARIS": {
+      "country": "France",
+      "city_or_region": "Paris",
+      "type": "major_data_centre_region",
+      "confirmed_constraints": [
+        "french_energy_code_data_centre_framework",
+        "possible_ICPE_environmental_permit",
+        "energy_and_water_reporting"
+      ],
+      "new_data_centre_decision": "requires_environmental_and_water_impact_check",
+      "existing_data_centre_action": [
+        "water_consumption_reporting",
+        "energy_efficiency_improvement",
+        "heat_recovery_assessment"
+      ]
+    },
+    "DK_COPENHAGEN": {
+      "country": "Denmark",
+      "city_or_region": "Copenhagen area",
+      "type": "major_data_centre_region",
+      "confirmed_constraints": [
+        "temporary_large_grid_connection_pause_or_delay_risk",
+        "grid_capacity_check_required"
+      ],
+      "new_data_centre_decision": "do_not_recommend_without_confirmed_grid_connection",
+      "existing_data_centre_action": [
+        "reduce_peak_demand",
+        "use_heat_reuse_if_possible"
+      ]
+    },
+    "DK_KOGE": {
+      "country": "Denmark",
+      "city_or_region": "Koge",
+      "type": "microsoft_related_region",
+      "confirmed_constraints": [
+        "temporary_large_grid_connection_pause_or_delay_risk",
+        "grid_capacity_check_required"
+      ],
+      "new_data_centre_decision": "do_not_recommend_without_confirmed_grid_connection"
+    },
+    "FI_HELSINKI": {
+      "country": "Finland",
+      "city_or_region": "Helsinki region",
+      "type": "major_data_centre_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "research_required_for_local_grid_rules",
+        "heat_reuse_assessment_required"
+      ],
+      "new_data_centre_decision": "requires_local_grid_check_and_heat_reuse_assessment",
+      "existing_data_centre_action": [
+        "heat_reuse_assessment",
+        "PUE_reduction",
+        "EU_reporting_compliance"
+      ]
+    },
+    "SE_STOCKHOLM": {
+      "country": "Sweden",
+      "city_or_region": "Stockholm region",
+      "type": "major_data_centre_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "research_required_for_local_grid_rules",
+        "environmental_permit_check_required"
+      ],
+      "new_data_centre_decision": "requires_local_grid_and_environmental_check"
+    },
+    "ES_MADRID": {
+      "country": "Spain",
+      "city_or_region": "Madrid",
+      "type": "major_data_centre_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "water_stress_check_required",
+        "local_grid_check_required"
+      ],
+      "new_data_centre_decision": "penalize_if_water_stress_or_grid_pressure_is_high"
+    },
+    "PT_SINES": {
+      "country": "Portugal",
+      "city_or_region": "Sines",
+      "type": "major_data_centre_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "water_stress_check_required",
+        "environmental_permit_check_required"
+      ],
+      "new_data_centre_decision": "requires_water_and_environmental_impact_check"
+    },
+    "IT_MILAN": {
+      "country": "Italy",
+      "city_or_region": "Milan",
+      "type": "major_data_centre_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "research_required_for_local_grid_rules",
+        "water_stress_check_required"
+      ],
+      "new_data_centre_decision": "requires_local_grid_water_and_environmental_check"
+    },
+    "PL_WARSAW": {
+      "country": "Poland",
+      "city_or_region": "Warsaw",
+      "type": "major_data_centre_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "carbon_intensity_check_required",
+        "local_grid_check_required"
+      ],
+      "new_data_centre_decision": "penalize_if_carbon_intensity_or_grid_pressure_is_high"
+    },
+    "BE_BRUSSELS": {
+      "country": "Belgium",
+      "city_or_region": "Brussels",
+      "type": "major_data_centre_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "research_required_for_local_grid_rules",
+        "environmental_permit_check_required"
+      ],
+      "new_data_centre_decision": "requires_local_grid_and_environmental_check"
+    },
+    "RO_BUCHAREST": {
+      "country": "Romania",
+      "city_or_region": "Bucharest",
+      "type": "major_infrastructure_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "local_grid_check_required",
+        "environmental_permit_check_required",
+        "water_stress_check_required"
+      ],
+      "new_data_centre_decision": "requires_grid_environmental_and_water_assessment",
+      "existing_data_centre_action": [
+        "EU_reporting_compliance",
+        "PUE_reduction",
+        "WUE_monitoring",
+        "renewable_transition",
+        "cooling_optimization"
+      ]
+    },
+    "GR_ATHENS": {
+      "country": "Greece",
+      "city_or_region": "Athens",
+      "type": "major_infrastructure_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "water_stress_check_required",
+        "local_grid_check_required",
+        "environmental_permit_check_required"
+      ],
+      "new_data_centre_decision": "penalize_if_water_stress_or_grid_pressure_is_high",
+      "existing_data_centre_action": [
+        "water_consumption_reduction",
+        "cooling_optimization",
+        "EU_reporting_compliance"
+      ]
+    },
+    "BG_SOFIA": {
+      "country": "Bulgaria",
+      "city_or_region": "Sofia",
+      "type": "major_infrastructure_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "local_grid_check_required",
+        "environmental_permit_check_required"
+      ],
+      "new_data_centre_decision": "requires_local_grid_and_environmental_check",
+      "existing_data_centre_action": [
+        "EU_reporting_compliance",
+        "PUE_reduction",
+        "renewable_transition"
+      ]
+    },
+    "HU_BUDAPEST": {
+      "country": "Hungary",
+      "city_or_region": "Budapest",
+      "type": "major_infrastructure_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "local_grid_check_required",
+        "environmental_permit_check_required"
+      ],
+      "new_data_centre_decision": "requires_local_grid_and_environmental_check",
+      "existing_data_centre_action": [
+        "EU_reporting_compliance",
+        "PUE_reduction",
+        "energy_monitoring"
+      ]
+    },
+    "CZ_PRAGUE": {
+      "country": "Czechia",
+      "city_or_region": "Prague",
+      "type": "major_infrastructure_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "local_grid_check_required",
+        "carbon_intensity_check_required"
+      ],
+      "new_data_centre_decision": "penalize_if_carbon_intensity_or_grid_pressure_is_high",
+      "existing_data_centre_action": [
+        "EU_reporting_compliance",
+        "renewable_electricity_transition",
+        "PUE_reduction"
+      ]
+    },
+    "AT_VIENNA": {
+      "country": "Austria",
+      "city_or_region": "Vienna",
+      "type": "major_infrastructure_region",
+      "applicable_rules_and_required_checks": [
+        "EU_data_centre_reporting_applies_if_it_power_above_500kw",
+        "local_grid_check_required",
+        "environmental_permit_check_required"
+      ],
+      "new_data_centre_decision": "requires_local_grid_and_environmental_check",
+      "existing_data_centre_action": [
+        "EU_reporting_compliance",
+        "PUE_reduction",
+        "heat_reuse_where_possible"
+      ]
+    }
+  },
+  "decision_rules": {
+    "blocking_rules": {
+      "hyperscale_restricted_and_not_in_exception_zone": "reject",
+      "no_grid_connection_available": "reject",
+      "protected_natural_area": "reject",
+      "missing_required_environmental_permit": "reject"
+    },
+    "strong_penalties": {
+      "grid_connection_risk_high": -30,
+      "water_stress_high": -25,
+      "high_carbon_intensity": -25,
+      "no_waste_heat_reuse_plan_where_required": -20,
+      "no_renewable_generation_where_required": -30,
+      "no_dispatchable_generation_where_required": -25
+    },
+    "moderate_penalties": {
+      "local_rules_research_required": -10,
+      "environmental_permit_unclear": -15,
+      "district_heating_not_available": -10,
+      "existing_centre_high_PUE": -20,
+      "existing_centre_high_WUE": -20
+    },
+    "bonuses": {
+      "confirmed_low_carbon_electricity": 25,
+      "confirmed_renewable_generation_plan": 20,
+      "district_heating_or_heat_reuse_available": 20,
+      "brownfield_or_existing_industrial_site": 15,
+      "low_water_stress": 15,
+      "cold_climate_for_free_cooling": 10,
+      "existing_centre_retrofit_plan_available": 15
+    }
+  },
+  "outputs_for_application": {
+    "new_data_centre_module": [
+      "accepted_or_rejected",
+      "rejection_reasons",
+      "regulatory_constraints",
+      "grid_risk",
+      "water_risk",
+      "heat_reuse_requirement",
+      "recommended_next_checks"
+    ],
+    "existing_data_centre_module": [
+      "retrofit_priority_list",
+      "required_reporting_kpis",
+      "required_reported_data",
+      "legal_compliance_gaps",
+      "environmental_damage_drivers",
+      "recommended_interventions"
+    ]
+  }
+}
