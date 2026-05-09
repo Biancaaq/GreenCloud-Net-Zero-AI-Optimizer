@@ -314,3 +314,30 @@ body {
     border-radius: 4px;
     overflow: hidden;
 }
+
+/* Custom Range Sliders */
+.custom-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    outline: none;
+}
+
+.custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-eco-green);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(112, 162, 136, 0.5);
+}
+
+.custom-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #fff;
+}
