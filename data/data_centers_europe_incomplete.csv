@@ -1,0 +1,16 @@
+Operator,Location,Country,IT_Capacity_MW,PUE,WUE_L_kWh,Grid_Carbon_gCO2_kWh,Status
+Microsoft,Gavle/Sandviken,Sweden,150,1.17,0.01,12,verified
+Microsoft,Dublin,Ireland,120,1.22,1.48,348,estimated
+Microsoft,Middenmeer,Netherlands,70,1.18,1.10,310,estimated
+Google,Hamina,Finland,150,1.09,0.05,56,verified
+Google,St. Ghislain,Belgium,100,1.09,1.20,115,verified
+Equinix,Frankfurt (FR5),Germany,25,1.45,1.80,385,estimated
+Equinix,Warsaw (WA3),Poland,12,1.55,1.90,660,estimated
+Equinix,London (LD5),UK,35,1.35,1.50,210,estimated
+OVHcloud,Gravelines,France,40,1.09,0.20,58,estimated
+Digital Realty,Marseille (MRS3),France,22,1.21,0.10,58,estimated
+Meta,Lulea,Sweden,40,1.07,0.02,12,verified
+Orange,Val-de-Reuil,France,18,1.30,1.40,58,estimated
+Interxion (Digital Realty),Amsterdam (AMS5),Netherlands,14,1.25,1.25,310,verified
+Aruba.it,Bergamo (IT3),Italy,65,1.12,0.40,230,verified
+Green Mountain,Stavanger (SVG1),Norway,25,1.18,0.02,25,verified
