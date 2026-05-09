@@ -18,11 +18,23 @@ class RAGEngine:
         with open(KNOWLEDGE_BASE_PATH, "r", encoding="utf-8") as file:
             return json.load(file)
 
+    def document_to_text(self, doc: dict):
+        symptoms = " ".join(doc.get("symptoms", []))
+        actions = " ".join(doc.get("recommended_actions", []))
+
+        return f"""
+        Label: {doc.get("label", "")}
+        Title: {doc.get("title", "")}
+        Content: {doc.get("content", "")}
+        Symptoms: {symptoms}
+        Recommended actions: {actions}
+        Expected impact: {doc.get("expected_impact", "")}
+        Risk level: {doc.get("risk_level", "")}
+        Estimated saving percent: {doc.get("estimated_saving_pct", 0)}
+        """
+
     def build_index(self):
-        texts = [
-            f"{doc['label']} {doc['title']} {doc['content']}"
-            for doc in self.documents
-        ]
+        texts = [self.document_to_text(doc) for doc in self.documents]
 
         embeddings = self.embedding_model.encode(texts)
         embeddings = np.array(embeddings).astype("float32")
@@ -37,19 +49,19 @@ class RAGEngine:
         Problem label: {label}
 
         Data center context:
-        Timestamp_Hour: {context['Timestamp_Hour']}
-        Operator: {context['Operator']}
-        Location: {context['Location']}
-        Ambient_Temp_C: {context['Ambient_Temp_C']}
-        Ambient_Hum_Pct: {context['Ambient_Hum_Pct']}
-        IT_Load_kW: {context['IT_Load_kW']}
-        Fan_Speed_Pct: {context['Fan_Speed_Pct']}
-        Chiller_Status: {context['Chiller_Status']}
-        Cold_Aisle_Temp: {context['Cold_Aisle_Temp']}
-        Hot_Aisle_Temp: {context['Hot_Aisle_Temp']}
-        Rack_Inlet_Temp: {context['Rack_Inlet_Temp']}
-        HVAC_Power_kW: {context['HVAC_Power_kW']}
-        PUE: {context['PUE']}
+        Timestamp_Hour: {context.get("Timestamp_Hour")}
+        Operator: {context.get("Operator")}
+        Location: {context.get("Location")}
+        Ambient_Temp_C: {context.get("Ambient_Temp_C")}
+        Ambient_Hum_Pct: {context.get("Ambient_Hum_Pct")}
+        IT_Load_kW: {context.get("IT_Load_kW")}
+        Fan_Speed_Pct: {context.get("Fan_Speed_Pct")}
+        Chiller_Status: {context.get("Chiller_Status")}
+        Cold_Aisle_Temp: {context.get("Cold_Aisle_Temp")}
+        Hot_Aisle_Temp: {context.get("Hot_Aisle_Temp")}
+        Rack_Inlet_Temp: {context.get("Rack_Inlet_Temp")}
+        HVAC_Power_kW: {context.get("HVAC_Power_kW")}
+        PUE: {context.get("PUE")}
         """
 
         query_embedding = self.embedding_model.encode([query])
@@ -57,4 +69,8 @@ class RAGEngine:
 
         distances, indices = self.index.search(query_embedding, top_k)
 
-        return [self.documents[idx] for idx in indices[0]]
+        results = []
+        for idx in indices[0]:
+            results.append(self.documents[idx])
+
+        return results

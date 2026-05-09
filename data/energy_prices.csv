@@ -1,0 +1,16 @@
+Location,Country,Energy_Price_EUR_per_kWh,Carbon_Intensity_gCO2_per_kWh,Currency
+Gavle,Sweden,0.097,20,EUR
+Dublin,Ireland,0.2552,300,EUR
+Middenmeer,Netherlands,0.21,250,EUR
+Hamina,Finland,0.0748,90,EUR
+St. Ghislain,Belgium,0.20,180,EUR
+Frankfurt,Germany,0.2264,340,EUR
+Warsaw,Poland,0.20,690,EUR
+London,United Kingdom,0.23,180,EUR
+Gravelines,France,0.18,30,EUR
+Marseille,France,0.18,30,EUR
+Lulea,Sweden,0.097,20,EUR
+Val-De-Reuil,France,0.18,30,EUR
+Amsterdam,Netherlands,0.21,250,EUR
+Bergamo,Italy,0.22,270,EUR
+Stavanger,Norway,0.10,20,EUR

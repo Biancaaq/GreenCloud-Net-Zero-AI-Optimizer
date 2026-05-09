@@ -1,0 +1,95 @@
+[
+  {
+    "label": "OPTIMAL",
+    "title": "Optimal Cooling State",
+    "estimated_saving_pct": 0,
+    "content": "The cooling system is operating efficiently. Temperatures are within safe limits, PUE is low, and HVAC power consumption is proportional to the IT workload.",
+    "symptoms": [
+      "Rack inlet temperature is within safe limits",
+      "Cold aisle temperature is stable",
+      "Hot aisle temperature is controlled",
+      "PUE is low or within the expected range",
+      "HVAC power consumption is proportional to IT load"
+    ],
+    "recommended_actions": [
+      "Maintain the current cooling configuration.",
+      "Continue monitoring rack inlet temperature, aisle temperatures, HVAC power, and PUE.",
+      "Avoid unnecessary increases in fan speed or chiller output.",
+      "Use this state as a baseline for future efficiency comparisons."
+    ],
+    "expected_impact": "Maintains energy efficiency, thermal safety, and stable operation.",
+    "risk_level": "LOW"
+  },
+  {
+    "label": "STABLE",
+    "title": "Stable Cooling State",
+    "estimated_saving_pct": 3,
+    "content": "The cooling system is operating safely, but it may not be fully optimized. Temperatures are acceptable, and there is no immediate thermal risk, but small energy savings may be possible.",
+    "symptoms": [
+      "Temperatures are within acceptable limits",
+      "PUE is moderate",
+      "HVAC power consumption is slightly above optimal levels",
+      "Fan speed is stable",
+      "No clear overheating indicators are present"
+    ],
+    "recommended_actions": [
+      "Monitor temperature trends over time.",
+      "Check whether fan speed can be reduced gradually without increasing rack inlet temperature.",
+      "Compare HVAC power consumption against IT load.",
+      "Keep the current configuration if temperatures remain stable.",
+      "Compare the current state with the OPTIMAL baseline."
+    ],
+    "expected_impact": "May reduce energy consumption slightly while keeping the system thermally safe.",
+    "risk_level": "LOW_MEDIUM"
+  },
+  {
+    "label": "INEFFICIENT_COOLING",
+    "title": "Inefficient Cooling",
+    "estimated_saving_pct": 12,
+    "content": "The cooling system is consuming more energy than necessary compared to the thermal benefit achieved. HVAC power and PUE may be high, while temperatures remain stable only because of excessive cooling effort.",
+    "symptoms": [
+      "High HVAC power consumption",
+      "Elevated PUE",
+      "High fan speed percentage",
+      "Cooling effort is disproportionate to IT load",
+      "Temperatures are acceptable but maintained with excessive energy use"
+    ],
+    "recommended_actions": [
+      "Check whether fan speed is higher than necessary.",
+      "Analyze the temperature difference between the cold aisle and hot aisle.",
+      "Inspect airflow paths for physical obstructions.",
+      "Check filters, vents, containment panels, and cable management.",
+      "Increase chiller setpoint gradually if rack inlet temperatures remain safe.",
+      "Optimize airflow distribution before increasing HVAC capacity.",
+      "Identify possible overcooled zones inside the data center."
+    ],
+    "expected_impact": "Reduces HVAC energy consumption, improves PUE, and maintains safe operating temperatures.",
+    "risk_level": "MEDIUM"
+  },
+  {
+    "label": "CRITICAL_OVERHEAT",
+    "title": "Critical Overheat Condition",
+    "estimated_saving_pct": 8,
+    "content": "A critical thermal risk has been detected. Rack inlet temperature, hot aisle temperature, or cold aisle temperature may be too high, creating a risk of hardware degradation, throttling, or service interruption.",
+    "symptoms": [
+      "Very high rack inlet temperature",
+      "Excessive hot aisle temperature",
+      "Cold aisle temperature above recommended limits",
+      "High IT load",
+      "Insufficient fan speed for the observed thermal conditions",
+      "High HVAC power with limited cooling effectiveness"
+    ],
+    "recommended_actions": [
+      "Increase fan speed immediately to improve airflow.",
+      "Verify that the chiller system is active and functioning correctly.",
+      "Temporarily reduce the cooling setpoint if temperatures continue to rise.",
+      "Redistribute or reduce workload on affected racks.",
+      "Inspect airflow blockages, missing blanking panels, and cable obstructions.",
+      "Check for hot and cold air mixing in containment areas.",
+      "Activate operational alerts and monitor temperatures in real time.",
+      "After temperatures stabilize, review airflow design and cooling capacity."
+    ],
+    "expected_impact": "Reduces thermal risk, prevents equipment damage, and lowers the probability of downtime.",
+    "risk_level": "HIGH"
+  }
+]
