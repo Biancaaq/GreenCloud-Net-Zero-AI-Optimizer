@@ -12,17 +12,18 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
+# pyrefly: ignore [missing-import]
 import environ
 
-# Inițializăm environ
+# Initialize environ
 env = environ.Env(
-    DEBUG=(bool, False) # setăm un default sigur pentru producție
+    DEBUG=(bool, False) # set a safe default for production
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Citim fișierul .env
+# Read the .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
@@ -126,9 +127,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]

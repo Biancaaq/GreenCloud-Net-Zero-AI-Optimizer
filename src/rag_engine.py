@@ -1,6 +1,8 @@
 import json
+import os
 
-KNOWLEDGE_BASE_PATH = "data/knowledge_base.json"
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+KNOWLEDGE_BASE_PATH = os.path.join(PROJECT_ROOT, "data", "knowledge_base.json")
 
 class RAGEngine:
     def __init__(self):

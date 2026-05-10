@@ -1,8 +1,10 @@
+# pyrefly: ignore [missing-import]
 from django.contrib import admin
-from django.urls import path, include  # <-- Asigură-te că adaugi 'include' aici
+# pyrefly: ignore [missing-import]
+from django.urls import path, include  # <-- Make sure to add 'include' here
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Legăm rutele din 'optimizer' de proiectul principal
+    # Link optimizer app routes to the main project
     path('', include('optimizer.urls')), 
 ]

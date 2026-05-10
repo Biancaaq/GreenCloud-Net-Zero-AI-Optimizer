@@ -241,6 +241,14 @@
         // ---- 1. Slider Cascade Logic (FIXED) ----
         const sliders = Array.from(document.querySelectorAll('.custom-slider'));
 
+        // Initialize all weight labels from slider values on page load
+        sliders.forEach(s => {
+            let container = s.previousElementSibling;
+            if (container && container.querySelector('.weight-val')) {
+                container.querySelector('.weight-val').innerText = s.value + '%';
+            }
+        });
+
         sliders.forEach((slider, index) => {
             slider.addEventListener('input', (e) => {
                 let total = 100;

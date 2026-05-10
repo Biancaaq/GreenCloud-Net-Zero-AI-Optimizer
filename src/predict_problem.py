@@ -1,8 +1,10 @@
+import os
 import pandas as pd
 import joblib
 
 
-MODEL_PATH = "data/models/cooling_classifier.pkl"
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.path.join(PROJECT_ROOT, "data", "models", "cooling_classifier.pkl")
 
 
 def predict_problem(input_data: dict):

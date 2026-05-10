@@ -1,7 +1,9 @@
+import os
 import pandas as pd
 
 
-ENERGY_PRICES_PATH = "data/energy_prices.csv"
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENERGY_PRICES_PATH = os.path.join(PROJECT_ROOT, "data", "energy_prices.csv")
 
 
 def analyze_costs(input_data: dict, solution: dict):

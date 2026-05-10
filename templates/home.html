@@ -58,11 +58,12 @@
             </div>
         </div>
 
-        <div class="row gy-5 mt-2">
+        <div class="row gy-5 mt-2 justify-content-center">
 
-            <div class="col-md-4">
+            <div class="col-md-5">
+                <a href="{% url 'infrastructure_map' %}" class="text-decoration-none">
                 <div class="feature-card h-100 p-4 rounded-3 d-flex flex-column"
-                    style="background-color: var(--color-surface);">
+                    style="background-color: var(--color-surface); cursor: pointer; transition: transform 0.2s, border-color 0.2s;">
                     <div class="mb-3">
                         <div class="d-inline-flex p-3 rounded-3" style="background-color: rgba(112, 162, 136, 0.1);">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="var(--color-eco-green)"
@@ -74,14 +75,16 @@
                     </div>
                     <h4 class="fw-bold text-white mb-2 text-md">Geospatial Smart Placement</h4>
                     <p class="text-muted-custom text-sm mb-0">Evaluate new infrastructure locations using our
-                        interactive map. The ML model routes workloads to regions with the highest real-time
-                        renewable energy output.</p>
+                        interactive map. The ML model ranks regions by land cost, water price, climate,
+                        green energy mix, grid capacity, and GDP to find the optimal datacenter site.</p>
                 </div>
+                </a>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-5">
+                <a href="{% url 'cooling_analyzer' %}" class="text-decoration-none">
                 <div class="feature-card h-100 p-4 rounded-3 d-flex flex-column"
-                    style="background-color: var(--color-surface);">
+                    style="background-color: var(--color-surface); cursor: pointer; transition: transform 0.2s, border-color 0.2s;">
                     <div class="mb-3">
                         <div class="d-inline-flex p-3 rounded-3" style="background-color: rgba(112, 162, 136, 0.1);">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="var(--color-eco-green)"
@@ -93,30 +96,12 @@
                             </svg>
                         </div>
                     </div>
-                    <h4 class="fw-bold text-white mb-2 text-md">Retrofit Simulator</h4>
-                    <p class="text-muted-custom text-sm mb-0">Input your existing data center specifications. Our
-                        tool calculates precise trade-offs, showing exactly how much CO2 and budget you save by
-                        right-sizing compute instances.</p>
+                    <h4 class="fw-bold text-white mb-2 text-md">HVAC Optimization Engine</h4>
+                    <p class="text-muted-custom text-sm mb-0">Run AI diagnostics on real data center telemetry.
+                        Our RandomForest classifier detects cooling inefficiencies and a RAG engine delivers
+                        targeted mitigation strategies with full ROI analysis.</p>
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card h-100 p-4 rounded-3 d-flex flex-column"
-                    style="background-color: var(--color-surface);">
-                    <div class="mb-3">
-                        <div class="d-inline-flex p-3 rounded-3" style="background-color: rgba(112, 162, 136, 0.1);">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="var(--color-eco-green)"
-                                viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <h4 class="fw-bold text-white mb-2 text-md">Telemetry Aggregation</h4>
-                    <p class="text-muted-custom text-sm mb-0">No synthetic metrics. The engine ingests real
-                        consumption data and grid emission factors to ground every recommendation in verifiable
-                        numbers.</p>
-                </div>
+                </a>
             </div>
 
         </div>
@@ -128,41 +113,42 @@
         <div class="row align-items-center gy-5">
 
             <div class="col-lg-5 pe-lg-5">
-                <span class="text-eco-green fw-semibold tracking-tight text-uppercase text-xs d-block mb-2">Quantifiable
-                    Results</span>
-                <h2 class="fw-bold text-white tracking-tight mb-4">Transparent Trade-offs</h2>
+                <span class="text-eco-green fw-semibold tracking-tight text-uppercase text-xs d-block mb-2">Case Study: Bergamo Datacenter</span>
+                <h2 class="fw-bold text-white tracking-tight mb-4">AI-Driven HVAC Optimization</h2>
                 <p class="text-muted-custom text-md mb-4" style="line-height: 1.7;">
-                    Optimization is never free. We provide total visibility into what you gain and what you sacrifice.
-                    In this example, routing batch jobs to a region with high renewable energy drastically cuts
-                    emissions, with only a minor, acceptable increase in latency.
+                    Our pipeline analyzed telemetry from a real facility running at PUE 1.32 with 82% fan speed.
+                    The RandomForest classifier detected <strong class="text-light">INEFFICIENT_COOLING</strong>,
+                    and the RAG engine prescribed targeted airflow corrections.
                 </p>
                 <ul class="list-unstyled text-muted-custom text-sm">
                     <li class="mb-3 d-flex align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color-eco-green)"
-                            class="me-3" viewBox="0 0 16 16">
+                            class="me-3 flex-shrink-0" viewBox="0 0 16 16">
                             <path
                                 d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
                         </svg>
-                        Up to 30% reduction in carbon emissions
+                        PUE reduced from 1.32 to 1.24 (estimated 12% HVAC savings)
                     </li>
                     <li class="mb-3 d-flex align-items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color-eco-green)"
-                            class="me-3" viewBox="0 0 16 16">
+                            class="me-3 flex-shrink-0" viewBox="0 0 16 16">
                             <path
                                 d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
                         </svg>
-                        Compute cost savings during off-peak grid hours
+                        Annual CO2 reduction of ~22 tons per facility
                     </li>
                     <li class="mb-3 d-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color-terracotta)"
-                            class="me-3" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color-eco-green)"
+                            class="me-3 flex-shrink-0" viewBox="0 0 16 16">
                             <path
-                                d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                                d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
                         </svg>
-                        <span class="text-terracotta">Acceptable latency trade-off (+45ms)</span>
+                        Monthly HVAC cost savings quantified per location
                     </li>
                 </ul>
+                <a href="{% url 'cooling_analyzer' %}" class="btn btn-outline-sand px-4 py-2 text-sm rounded-3 mt-2">
+                    Try It Yourself
+                </a>
             </div>
 
             <div class="col-lg-7">
@@ -170,8 +156,27 @@
 
                     <div class="mb-4">
                         <div class="d-flex justify-content-between mb-2 text-sm fw-semibold">
-                            <span class="text-white">Carbon Emissions (kgCO2)</span>
-                            <span class="text-eco-green">-30%</span>
+                            <span class="text-white">Power Usage Effectiveness (PUE)</span>
+                            <span class="text-eco-green">1.32 &rarr; 1.24</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-xs text-muted-custom" style="width: 50px;">Before</span>
+                            <div class="progress progress-glass flex-grow-1">
+                                <div class="progress-bar bg-terracotta" role="progressbar" style="width: 82%;"></div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            <span class="text-xs text-muted-custom" style="width: 50px;">After</span>
+                            <div class="progress progress-glass flex-grow-1">
+                                <div class="progress-bar bg-eco-green" role="progressbar" style="width: 48%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2 text-sm fw-semibold">
+                            <span class="text-white">HVAC Power Consumption</span>
+                            <span class="text-eco-green">-12%</span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="text-xs text-muted-custom" style="width: 50px;">Before</span>
@@ -182,26 +187,26 @@
                         <div class="d-flex align-items-center gap-2 mt-2">
                             <span class="text-xs text-muted-custom" style="width: 50px;">After</span>
                             <div class="progress progress-glass flex-grow-1">
-                                <div class="progress-bar bg-eco-green" role="progressbar" style="width: 70%;"></div>
+                                <div class="progress-bar bg-eco-green" role="progressbar" style="width: 88%;"></div>
                             </div>
                         </div>
                     </div>
 
                     <div>
                         <div class="d-flex justify-content-between mb-2 text-sm fw-semibold">
-                            <span class="text-white">Job Latency (ms)</span>
-                            <span class="text-terracotta">+45ms (Trade-off)</span>
+                            <span class="text-white">Carbon Emissions (tCO2e/yr)</span>
+                            <span class="text-eco-green">-22 tons</span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="text-xs text-muted-custom" style="width: 50px;">Before</span>
                             <div class="progress progress-glass flex-grow-1">
-                                <div class="progress-bar bg-eco-green" role="progressbar" style="width: 60%;"></div>
+                                <div class="progress-bar bg-terracotta" role="progressbar" style="width: 100%;"></div>
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2">
                             <span class="text-xs text-muted-custom" style="width: 50px;">After</span>
                             <div class="progress progress-glass flex-grow-1">
-                                <div class="progress-bar bg-terracotta" role="progressbar" style="width: 80%;"></div>
+                                <div class="progress-bar bg-eco-green" role="progressbar" style="width: 72%;"></div>
                             </div>
                         </div>
                     </div>
