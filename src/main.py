@@ -1,10 +1,12 @@
+import os
 import pandas as pd
 from predict_problem import predict_problem
 from rag_engine import RAGEngine
 from cost_analyzer import analyze_costs
 
-# Configuration
-DATASET_PATH = "data/base_dataset_data_centers.csv"
+# Configuration - use absolute paths relative to the project root
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATASET_PATH = os.path.join(PROJECT_ROOT, "data", "base_dataset_data_centers.csv")
 
 # Initialize RAG once (heavy operation)
 rag_engine = RAGEngine()

@@ -14,20 +14,32 @@
                 RAG-powered mitigation strategies.</p>
         </div>
         <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-            <button id="run-diagnostics-btn"
-                class="btn btn-primary-custom btn-glow px-4 py-2 text-sm fw-semibold rounded-2 d-inline-flex align-items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
-                    <path
-                        d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
-                </svg>
-                Run AI Diagnostics
-            </button>
+            <div class="d-flex align-items-center gap-3 justify-content-lg-end">
+                <select id="location-select" class="form-select form-select-sm text-sm fw-semibold"
+                    style="max-width: 180px; background-color: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; border-radius: 8px;">
+                    {% for loc in locations %}
+                    <option value="{{ loc }}">{{ loc }}</option>
+                    {% endfor %}
+                </select>
+                <button id="run-diagnostics-btn"
+                    class="btn btn-primary-custom btn-glow px-4 py-2 text-sm fw-semibold rounded-2 d-inline-flex align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        viewBox="0 0 16 16" id="diag-icon">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                        <path
+                            d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                    </svg>
+                    <span id="diag-text">Run AI Diagnostics</span>
+                    <span class="spinner-border spinner-border-sm d-none" id="diag-spinner" role="status"
+                        aria-hidden="true"></span>
+                </button>
+            </div>
         </div>
     </div>
 
     <div class="row g-4">
 
+        <!-- Panel 1: Data Center Telemetry -->
         <div class="col-lg-4">
             <div class="custom-card p-4 h-100" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
                 <h6
@@ -37,48 +49,71 @@
                 <div class="mb-4">
                     <div class="d-flex justify-content-between text-xs mb-1">
                         <span class="text-muted-custom">Ambient Temperature</span>
-                        <span class="text-warning fw-bold">28.4°C</span>
+                        <span class="text-warning fw-bold" id="tel-ambient-temp">—</span>
                     </div>
                     <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
-                        <div class="progress-bar bg-warning" style="width: 85%;"></div>
+                        <div class="progress-bar bg-warning" id="tel-ambient-bar" style="width: 0%;"></div>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between text-xs mb-1">
                         <span class="text-muted-custom">HVAC Power Draw</span>
-                        <span class="text-terracotta fw-bold">450 kW</span>
+                        <span class="text-terracotta fw-bold" id="tel-hvac-power">—</span>
                     </div>
                     <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
-                        <div class="progress-bar" style="width: 92%; background-color: var(--color-terracotta);"></div>
+                        <div class="progress-bar" id="tel-hvac-bar"
+                            style="width: 0%; background-color: var(--color-terracotta);"></div>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between text-xs mb-1">
                         <span class="text-muted-custom">Current PUE</span>
-                        <span class="text-warning fw-bold">1.85</span>
+                        <span class="text-warning fw-bold" id="tel-pue">—</span>
                     </div>
                     <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
-                        <div class="progress-bar bg-warning" style="width: 75%;"></div>
+                        <div class="progress-bar bg-warning" id="tel-pue-bar" style="width: 0%;"></div>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="text-muted-custom">IT Load</span>
+                        <span class="text-eco-green fw-bold" id="tel-it-load">—</span>
+                    </div>
+                    <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                        <div class="progress-bar bg-eco-green" id="tel-it-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="text-muted-custom">Fan Speed</span>
+                        <span class="fw-bold" id="tel-fan-speed" style="color: var(--color-sand);">—</span>
+                    </div>
+                    <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                        <div class="progress-bar" id="tel-fan-bar"
+                            style="width: 0%; background-color: var(--color-sand);"></div>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    <div class="d-flex justify-content-between text-xs">
                         <span class="text-muted-custom">Chiller Status</span>
-                        <span class="text-warning fw-bold">Struggling</span>
+                        <span class="fw-bold" id="tel-chiller">—</span>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Panel 2: AI Diagnosis & RAG -->
         <div class="col-lg-4">
             <div class="custom-card p-4 h-100 position-relative"
                 style="border-radius: 12px; border: 1px solid rgba(112, 162, 136, 0.3); background: linear-gradient(180deg, rgba(4,57,94,0.3) 0%, rgba(26,26,26,0) 100%);">
                 <h6
                     class="fw-bold text-white mb-4 text-sm text-uppercase tracking-tight border-bottom border-secondary pb-3">
-                    2. AI Diagnosis & RAG</h6>
+                    2. AI Diagnosis &amp; RAG</h6>
 
                 <div id="ai-waiting-state" class="text-center py-5">
                     <p class="text-muted-custom text-sm mb-0">Awaiting diagnostic run...</p>
@@ -94,11 +129,11 @@
                         <label
                             class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight d-block mb-2">System
                             Status Label</label>
-                        <div class="badge px-3 py-2 text-sm border"
+                        <div class="badge px-3 py-2 text-sm border" id="ai-label-badge"
                             style="background-color: rgba(218, 102, 85, 0.1); color: var(--color-terracotta); border-color: var(--color-terracotta) !important;">
-                            🚨 INEFFICIENT_COOLING
+                            —
                         </div>
-                        <p class="text-muted-custom text-xs mt-2">Confidence: 94.2%</p>
+                        <p class="text-muted-custom text-xs mt-2" id="ai-confidence">Confidence: —</p>
                     </div>
 
                     <div class="p-3 rounded-2"
@@ -108,13 +143,9 @@
                             <label class="text-white text-xs text-uppercase fw-bold tracking-tight mb-0">RAG Knowledge
                                 Retrieval</label>
                         </div>
-                        <p class="text-light text-sm mb-2" style="line-height: 1.5;">
-                            <strong>Diagnosis:</strong> Thermal bypass detected in Aisle 4. Cold air is mixing with
-                            exhaust before reaching server intakes.
+                        <p class="text-light text-sm mb-2" style="line-height: 1.5;" id="ai-diagnosis">
                         </p>
-                        <p class="text-eco-green text-sm mb-0 fw-semibold">
-                            <strong>Recommendation:</strong> Install blanking panels in empty U-slots and deploy
-                            cold-aisle containment curtains. Adjust Chiller #2 setpoint to 24°C.
+                        <p class="text-eco-green text-sm mb-0 fw-semibold" id="ai-recommendation">
                         </p>
                     </div>
                 </div>
@@ -122,11 +153,13 @@
             </div>
         </div>
 
+        <!-- Panel 3: ROI & Impact Analyzer -->
         <div class="col-lg-4">
-            <div class="custom-card p-4 h-100" style="border-radius: 12px; border: 1px solid rgba(218, 183, 133, 0.2);">
+            <div class="custom-card p-4 h-100"
+                style="border-radius: 12px; border: 1px solid rgba(218, 183, 133, 0.2);">
                 <h6
                     class="fw-bold text-white mb-4 text-sm text-uppercase tracking-tight border-bottom border-secondary pb-3">
-                    3. ROI & Impact Analyzer</h6>
+                    3. ROI &amp; Impact Analyzer</h6>
 
                 <div id="roi-waiting-state" class="text-center py-5">
                     <p class="text-muted-custom text-sm mb-0">Waiting for RAG output...</p>
@@ -137,8 +170,23 @@
                         <span class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight">Est. Annual
                             Savings</span>
                         <div class="d-flex align-items-baseline gap-2 mt-1">
-                            <h2 class="fw-bold text-white mb-0">€ 42,500</h2>
-                            <span class="text-success text-sm fw-semibold">↓ 18%</span>
+                            <h2 class="fw-bold text-white mb-0" id="roi-annual-saving">—</h2>
+                            <span class="text-success text-sm fw-semibold" id="roi-saving-pct">—</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <span class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight">Monthly Cost
+                            Comparison</span>
+                        <div class="d-flex align-items-center gap-3 mt-1">
+                            <span class="text-terracotta text-md text-decoration-line-through"
+                                id="roi-current-cost">—</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--text-muted)"
+                                viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.146-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                            </svg>
+                            <span class="text-eco-green fw-bold fs-4" id="roi-optimized-cost">—</span>
                         </div>
                     </div>
 
@@ -146,13 +194,14 @@
                         <span class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight">Projected
                             PUE</span>
                         <div class="d-flex align-items-center gap-3 mt-1">
-                            <span class="text-terracotta text-md text-decoration-line-through">1.85</span>
+                            <span class="text-terracotta text-md text-decoration-line-through"
+                                id="roi-current-pue">—</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--text-muted)"
                                 viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
                                     d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.146-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
                             </svg>
-                            <span class="text-eco-green fw-bold fs-4">1.45</span>
+                            <span class="text-eco-green fw-bold fs-4" id="roi-optimized-pue">—</span>
                         </div>
                     </div>
 
@@ -160,9 +209,8 @@
                         style="background-color: rgba(112, 162, 136, 0.1); border: 1px solid rgba(112, 162, 136, 0.3);">
                         <span class="text-eco-green text-xs text-uppercase fw-semibold tracking-tight">Carbon Footprint
                             Reduction</span>
-                        <h4 class="text-white fw-bold mt-2 mb-1">- 124 Tons CO₂e / yr</h4>
-                        <p class="text-muted-custom text-xs mb-0">Calculated based on local grid carbon intensity (310
-                            gCO2/kWh).</p>
+                        <h4 class="text-white fw-bold mt-2 mb-1" id="roi-co2-reduction">—</h4>
+                        <p class="text-muted-custom text-xs mb-0" id="roi-carbon-intensity">—</p>
                     </div>
                 </div>
 
@@ -175,37 +223,139 @@
 
 {% block scripts %}
 <script>
-    // Hackathon presentation magic: Simulate the AI processing pipeline
     document.getElementById('run-diagnostics-btn').addEventListener('click', function () {
         const btn = this;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+        const icon = document.getElementById('diag-icon');
+        const spinner = document.getElementById('diag-spinner');
+        const text = document.getElementById('diag-text');
+        const location = document.getElementById('location-select').value;
 
-        // Hide waiting states, show loader
+        // Disable button + show spinner
+        btn.disabled = true;
+        icon.classList.add('d-none');
+        spinner.classList.remove('d-none');
+        text.innerText = 'Processing...';
+
+        // Switch panel states
         document.getElementById('ai-waiting-state').classList.add('d-none');
+        document.getElementById('ai-result-state').classList.add('d-none');
         document.getElementById('roi-waiting-state').classList.add('d-none');
+        document.getElementById('roi-result-state').classList.add('d-none');
         document.getElementById('ai-loading-state').classList.remove('d-none');
 
-        // Simulate 2 seconds of RandomForest & RAG processing
-        setTimeout(() => {
-            document.getElementById('ai-loading-state').classList.add('d-none');
+        // Call the real API
+        fetch(`{% url 'cooling_diagnostics_api' %}?location=${encodeURIComponent(location)}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    throw new Error(data.error || 'Pipeline failed');
+                }
 
-            // Fade in AI Results
-            const aiResult = document.getElementById('ai-result-state');
-            aiResult.classList.remove('d-none');
-            aiResult.classList.add('fade-in'); // Assumes you have a simple fade-in CSS class
+                // ---- Panel 1: Telemetry ----
+                const inp = data.input;
 
-            // Delay the ROI calculation slightly for dramatic effect
-            setTimeout(() => {
-                const roiResult = document.getElementById('roi-result-state');
-                roiResult.classList.remove('d-none');
-                roiResult.classList.add('fade-in');
+                document.getElementById('tel-ambient-temp').innerText = inp.ambient_temp + '°C';
+                document.getElementById('tel-ambient-bar').style.width = Math.min(100, (inp.ambient_temp / 40) * 100) + '%';
 
-                btn.innerHTML = 'Diagnostics Complete';
-                btn.classList.replace('btn-primary-custom', 'btn-outline-secondary');
-            }, 800);
+                document.getElementById('tel-hvac-power').innerText = Math.round(inp.hvac_power).toLocaleString() + ' kW';
+                document.getElementById('tel-hvac-bar').style.width = Math.min(100, (inp.hvac_power / 50000) * 100) + '%';
 
-        }, 2000);
+                document.getElementById('tel-pue').innerText = inp.pue;
+                document.getElementById('tel-pue-bar').style.width = Math.min(100, ((inp.pue - 1.0) / 0.5) * 100) + '%';
+
+                document.getElementById('tel-it-load').innerText = inp.it_load.toLocaleString() + ' kW';
+                document.getElementById('tel-it-bar').style.width = Math.min(100, (inp.it_load / 150000) * 100) + '%';
+
+                document.getElementById('tel-fan-speed').innerText = inp.fan_speed + '%';
+                document.getElementById('tel-fan-bar').style.width = inp.fan_speed + '%';
+
+                const chillerEl = document.getElementById('tel-chiller');
+                chillerEl.innerText = inp.chiller_status;
+                chillerEl.className = 'fw-bold ' + (inp.chiller_status === 'Active' ? 'text-warning' : 'text-eco-green');
+
+                // ---- Panel 2: AI Diagnosis ----
+                document.getElementById('ai-loading-state').classList.add('d-none');
+                const aiResult = document.getElementById('ai-result-state');
+                aiResult.classList.remove('d-none');
+                aiResult.classList.add('fade-in');
+
+                const pred = data.prediction;
+                const rag = data.rag;
+
+                // Style the label badge based on risk
+                const labelBadge = document.getElementById('ai-label-badge');
+                const riskColors = {
+                    'LOW': { bg: 'rgba(112, 162, 136, 0.15)', color: 'var(--color-eco-green)', border: 'var(--color-eco-green)' },
+                    'LOW_MEDIUM': { bg: 'rgba(218, 183, 133, 0.15)', color: 'var(--color-sand)', border: 'var(--color-sand)' },
+                    'MEDIUM': { bg: 'rgba(218, 102, 85, 0.1)', color: 'var(--color-terracotta)', border: 'var(--color-terracotta)' },
+                    'HIGH': { bg: 'rgba(220, 53, 69, 0.2)', color: '#dc3545', border: '#dc3545' }
+                };
+                const riskStyle = riskColors[rag.risk_level] || riskColors['MEDIUM'];
+                labelBadge.style.backgroundColor = riskStyle.bg;
+                labelBadge.style.color = riskStyle.color;
+                labelBadge.style.borderColor = riskStyle.border + ' !important';
+
+                labelBadge.innerText = pred.label;
+
+                document.getElementById('ai-confidence').innerText = 'Confidence: ' + (pred.confidence * 100).toFixed(1) + '%';
+
+                document.getElementById('ai-diagnosis').innerHTML =
+                    '<strong>Diagnosis:</strong> ' + rag.content;
+
+                const actionsHtml = rag.recommended_actions.slice(0, 3).map(a => '• ' + a).join('<br>');
+                document.getElementById('ai-recommendation').innerHTML =
+                    '<strong>Recommendation:</strong><br>' + actionsHtml;
+
+                // ---- Panel 3: ROI (delayed for dramatic effect) ----
+                setTimeout(() => {
+                    const econ = data.economics;
+                    const roiResult = document.getElementById('roi-result-state');
+                    roiResult.classList.remove('d-none');
+                    roiResult.classList.add('fade-in');
+
+                    document.getElementById('roi-annual-saving').innerText = '€ ' + econ.annual_saving.toLocaleString();
+                    document.getElementById('roi-saving-pct').innerText = '↓ ' + econ.saving_pct + '%';
+
+                    document.getElementById('roi-current-cost').innerText = '€ ' + Math.round(econ.current_monthly_cost).toLocaleString();
+                    document.getElementById('roi-optimized-cost').innerText = '€ ' + Math.round(econ.optimized_monthly_cost).toLocaleString();
+
+                    document.getElementById('roi-current-pue').innerText = econ.current_pue;
+                    document.getElementById('roi-optimized-pue').innerText = econ.optimized_pue;
+
+                    document.getElementById('roi-co2-reduction').innerText = '- ' + econ.annual_co2_reduction_tons + ' Tons CO₂e / yr';
+                    document.getElementById('roi-carbon-intensity').innerText =
+                        'Calculated based on local grid carbon intensity (' + econ.carbon_intensity + ' gCO2/kWh).';
+
+                    // Reset button to success state
+                    spinner.classList.add('d-none');
+                    icon.classList.remove('d-none');
+                    text.innerText = 'Diagnostics Complete';
+                    btn.classList.replace('btn-primary-custom', 'btn-outline-secondary');
+                    btn.disabled = false;
+
+                    // Allow re-run after 2 seconds
+                    setTimeout(() => {
+                        btn.classList.replace('btn-outline-secondary', 'btn-primary-custom');
+                        text.innerText = 'Run AI Diagnostics';
+                    }, 2000);
+
+                }, 600);
+            })
+            .catch(err => {
+                console.error('Diagnostics error:', err);
+
+                document.getElementById('ai-loading-state').classList.add('d-none');
+                document.getElementById('ai-waiting-state').classList.remove('d-none');
+                document.getElementById('ai-waiting-state').innerHTML =
+                    '<p class="text-terracotta text-sm mb-0">Error: ' + err.message + '</p>';
+
+                spinner.classList.add('d-none');
+                icon.classList.remove('d-none');
+                text.innerText = 'Run AI Diagnostics';
+                btn.disabled = false;
+            });
     });
 </script>
 
@@ -224,6 +374,11 @@
             opacity: 1;
             transform: translateY(0);
         }
+    }
+
+    #location-select option {
+        background-color: #1a1a1a;
+        color: #fff;
     }
 </style>
 {% endblock %}

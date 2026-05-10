@@ -1,4 +1,5 @@
 import pandas as pd
+# pyrefly: ignore [missing-import]
 import joblib
 
 from sklearn.model_selection import train_test_split
@@ -85,7 +86,7 @@ def main():
         "features": NUMERIC_FEATURES + CATEGORICAL_FEATURES
     }, MODEL_PATH)
 
-    print(f"Model salvat în {MODEL_PATH}")
+    print(f"Model saved to {MODEL_PATH}")
 
 
 if __name__ == "__main__":
