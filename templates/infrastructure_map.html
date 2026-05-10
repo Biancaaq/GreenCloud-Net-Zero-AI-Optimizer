@@ -56,7 +56,7 @@
                         {% endif %}
                     </div>
 
-                    <div class="w-100 flex-grow-1 p-4 overflow-auto table-container-wrapper">
+                    <div class="w-100 flex-grow-1 p-4 overflow-auto table-container-wrapper mt-3">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="fw-bold text-white text-sm text-uppercase tracking-tight mb-0">Raw Telemetry
                                 Datasets</h5>
@@ -67,7 +67,7 @@
                             {% if dataframes_html %}
                             {{ dataframes_html|safe }}
                             {% else %}
-                            <table class="table table-dark table-hover table-borderless text-sm mb-0">
+                            <table class="table table-custom text-sm mb-0">
                                 <!-- Fallback empty table handled by backend -->
                             </table>
                             {% endif %}
@@ -95,7 +95,8 @@
                                 class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Land
                                 Price</label>
                             <!-- prettier-ignore -->
-                            <span class="text-white fw-bold weight-val">{{ weights.weight_land_price|default:'20' }}%</span>
+                            <span class="text-white fw-bold weight-val">{{ weights.weight_land_price|default:'20'
+                                }}%</span>
                         </div>
                         <input type="range" id="slider_land" class="form-range custom-slider" name="weight_land_price"
                             min="1" max="95" value="{{ weights.weight_land_price|default:'20' }}">
@@ -105,22 +106,23 @@
                         <div class="d-flex justify-content-between align-items-center text-xs mb-2">
                             <label for="slider_water"
                                 class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Water
-                                Utilities</label>
+                                Price</label>
                             <!-- prettier-ignore -->
-                            <span class="text-white fw-bold weight-val">{{ weights.weight_water_utilities|default:'20' }}%</span>
+                            <span class="text-white fw-bold weight-val">{{ weights.weight_water_price|default:'20'
+                                }}%</span>
                         </div>
-                        <input type="range" id="slider_water" class="form-range custom-slider"
-                            name="weight_water_utilities" min="1" max="95"
-                            value="{{ weights.weight_water_utilities|default:'20' }}">
+                        <input type="range" id="slider_water" class="form-range custom-slider" name="weight_water_price"
+                            min="1" max="95" value="{{ weights.weight_water_price|default:'20' }}">
                     </div>
 
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center text-xs mb-2">
                             <label for="slider_climate"
-                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Climate
-                                Conditions</label>
+                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Average Temp
+                                (Climate)</label>
                             <!-- prettier-ignore -->
-                            <span class="text-white fw-bold weight-val">{{ weights.weight_climate|default:'20' }}%</span>
+                            <span class="text-white fw-bold weight-val">{{ weights.weight_climate|default:'20'
+                                }}%</span>
                         </div>
                         <input type="range" id="slider_climate" class="form-range custom-slider" name="weight_climate"
                             min="1" max="95" value="{{ weights.weight_climate|default:'20' }}">
@@ -129,23 +131,25 @@
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center text-xs mb-2">
                             <label for="slider_energy"
-                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Energy
-                                Price</label>
+                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Green Energy
+                                (%)</label>
                             <!-- prettier-ignore -->
-                            <span class="text-white fw-bold weight-val">{{ weights.weight_energy_price|default:'20' }}%</span>
+                            <span class="text-white fw-bold weight-val">{{ weights.weight_green_energy|default:'20'
+                                }}%</span>
                         </div>
                         <input type="range" id="slider_energy" class="form-range custom-slider"
-                            name="weight_energy_price" min="1" max="95"
-                            value="{{ weights.weight_energy_price|default:'20' }}">
+                            name="weight_green_energy" min="1" max="95"
+                            value="{{ weights.weight_green_energy|default:'20' }}">
                     </div>
 
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center text-xs mb-2">
                             <label for="slider_green"
-                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Green Energy
-                                Cap.</label>
+                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Total Capacity
+                                (MW)</label>
                             <!-- prettier-ignore -->
-                            <span class="text-white fw-bold weight-val">{{ weights.weight_energy_capacity|default:'10' }}%</span>
+                            <span class="text-white fw-bold weight-val">{{ weights.weight_energy_capacity|default:'10'
+                                }}%</span>
                         </div>
                         <input type="range" id="slider_green" class="form-range custom-slider"
                             name="weight_energy_capacity" min="1" max="100"
@@ -155,14 +159,13 @@
                     <div class="mb-4">
                         <div class="d-flex justify-content-between align-items-center text-xs mb-2">
                             <label for="slider_gdp"
-                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">Regional
-                                Economy (GDP)</label>
+                                class="text-muted-custom fw-semibold text-uppercase tracking-tight mb-0">GDP Per
+                                Capita</label>
                             <!-- prettier-ignore -->
-                            <span class="text-white fw-bold weight-val">{{ weights.weight_regional_economy|default:'10' }}%</span>
+                            <span class="text-white fw-bold weight-val">{{ weights.weight_gdp|default:'10' }}%</span>
                         </div>
-                        <input type="range" id="slider_gdp" class="form-range custom-slider"
-                            name="weight_regional_economy" min="1" max="95"
-                            value="{{ weights.weight_regional_economy|default:'10' }}">
+                        <input type="range" id="slider_gdp" class="form-range custom-slider" name="weight_gdp" min="1"
+                            max="95" value="{{ weights.weight_gdp|default:'10' }}">
                     </div>
 
                     <button type="submit" id="recalc-btn"

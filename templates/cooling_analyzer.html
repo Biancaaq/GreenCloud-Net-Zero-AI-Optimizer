@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}Cooling Analyzer | GreenCloud{% endblock %}
+
+{% block content %}
+<div class="container pt-4 mb-5">
+
+    <div class="row mb-4 align-items-end">
+        <div class="col-lg-8">
+            <span class="text-eco-green fw-semibold tracking-tight text-uppercase text-xs d-block mb-1">Facility
+                Operations</span>
+            <h2 class="fw-bold text-white tracking-tight mb-2">HVAC Optimization Engine</h2>
+            <p class="text-muted-custom text-sm mb-0">Live telemetry analysis via RandomForest classification and
+                RAG-powered mitigation strategies.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <button id="run-diagnostics-btn"
+                class="btn btn-primary-custom btn-glow px-4 py-2 text-sm fw-semibold rounded-2 d-inline-flex align-items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                    <path
+                        d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                </svg>
+                Run AI Diagnostics
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-4">
+            <div class="custom-card p-4 h-100" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                <h6
+                    class="fw-bold text-white mb-4 text-sm text-uppercase tracking-tight border-bottom border-secondary pb-3">
+                    1. Data Center Telemetry</h6>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="text-muted-custom">Ambient Temperature</span>
+                        <span class="text-warning fw-bold">28.4°C</span>
+                    </div>
+                    <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                        <div class="progress-bar bg-warning" style="width: 85%;"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="text-muted-custom">HVAC Power Draw</span>
+                        <span class="text-terracotta fw-bold">450 kW</span>
+                    </div>
+                    <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                        <div class="progress-bar" style="width: 92%; background-color: var(--color-terracotta);"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="text-muted-custom">Current PUE</span>
+                        <span class="text-warning fw-bold">1.85</span>
+                    </div>
+                    <div class="progress" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                        <div class="progress-bar bg-warning" style="width: 75%;"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between text-xs mb-1">
+                        <span class="text-muted-custom">Chiller Status</span>
+                        <span class="text-warning fw-bold">Struggling</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="custom-card p-4 h-100 position-relative"
+                style="border-radius: 12px; border: 1px solid rgba(112, 162, 136, 0.3); background: linear-gradient(180deg, rgba(4,57,94,0.3) 0%, rgba(26,26,26,0) 100%);">
+                <h6
+                    class="fw-bold text-white mb-4 text-sm text-uppercase tracking-tight border-bottom border-secondary pb-3">
+                    2. AI Diagnosis & RAG</h6>
+
+                <div id="ai-waiting-state" class="text-center py-5">
+                    <p class="text-muted-custom text-sm mb-0">Awaiting diagnostic run...</p>
+                </div>
+
+                <div id="ai-loading-state" class="text-center py-5 d-none">
+                    <div class="spinner-border text-eco-green mb-3" role="status"></div>
+                    <p class="text-muted-custom text-xs text-uppercase tracking-tight">RandomForest Processing...</p>
+                </div>
+
+                <div id="ai-result-state" class="d-none">
+                    <div class="mb-4">
+                        <label
+                            class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight d-block mb-2">System
+                            Status Label</label>
+                        <div class="badge px-3 py-2 text-sm border"
+                            style="background-color: rgba(218, 102, 85, 0.1); color: var(--color-terracotta); border-color: var(--color-terracotta) !important;">
+                            🚨 INEFFICIENT_COOLING
+                        </div>
+                        <p class="text-muted-custom text-xs mt-2">Confidence: 94.2%</p>
+                    </div>
+
+                    <div class="p-3 rounded-2"
+                        style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="pulse-dot"></span>
+                            <label class="text-white text-xs text-uppercase fw-bold tracking-tight mb-0">RAG Knowledge
+                                Retrieval</label>
+                        </div>
+                        <p class="text-light text-sm mb-2" style="line-height: 1.5;">
+                            <strong>Diagnosis:</strong> Thermal bypass detected in Aisle 4. Cold air is mixing with
+                            exhaust before reaching server intakes.
+                        </p>
+                        <p class="text-eco-green text-sm mb-0 fw-semibold">
+                            <strong>Recommendation:</strong> Install blanking panels in empty U-slots and deploy
+                            cold-aisle containment curtains. Adjust Chiller #2 setpoint to 24°C.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="custom-card p-4 h-100" style="border-radius: 12px; border: 1px solid rgba(218, 183, 133, 0.2);">
+                <h6
+                    class="fw-bold text-white mb-4 text-sm text-uppercase tracking-tight border-bottom border-secondary pb-3">
+                    3. ROI & Impact Analyzer</h6>
+
+                <div id="roi-waiting-state" class="text-center py-5">
+                    <p class="text-muted-custom text-sm mb-0">Waiting for RAG output...</p>
+                </div>
+
+                <div id="roi-result-state" class="d-none">
+                    <div class="mb-4">
+                        <span class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight">Est. Annual
+                            Savings</span>
+                        <div class="d-flex align-items-baseline gap-2 mt-1">
+                            <h2 class="fw-bold text-white mb-0">€ 42,500</h2>
+                            <span class="text-success text-sm fw-semibold">↓ 18%</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <span class="text-muted-custom text-xs text-uppercase fw-semibold tracking-tight">Projected
+                            PUE</span>
+                        <div class="d-flex align-items-center gap-3 mt-1">
+                            <span class="text-terracotta text-md text-decoration-line-through">1.85</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--text-muted)"
+                                viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.146-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                            </svg>
+                            <span class="text-eco-green fw-bold fs-4">1.45</span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-2"
+                        style="background-color: rgba(112, 162, 136, 0.1); border: 1px solid rgba(112, 162, 136, 0.3);">
+                        <span class="text-eco-green text-xs text-uppercase fw-semibold tracking-tight">Carbon Footprint
+                            Reduction</span>
+                        <h4 class="text-white fw-bold mt-2 mb-1">- 124 Tons CO₂e / yr</h4>
+                        <p class="text-muted-custom text-xs mb-0">Calculated based on local grid carbon intensity (310
+                            gCO2/kWh).</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Hackathon presentation magic: Simulate the AI processing pipeline
+    document.getElementById('run-diagnostics-btn').addEventListener('click', function () {
+        const btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+        // Hide waiting states, show loader
+        document.getElementById('ai-waiting-state').classList.add('d-none');
+        document.getElementById('roi-waiting-state').classList.add('d-none');
+        document.getElementById('ai-loading-state').classList.remove('d-none');
+
+        // Simulate 2 seconds of RandomForest & RAG processing
+        setTimeout(() => {
+            document.getElementById('ai-loading-state').classList.add('d-none');
+
+            // Fade in AI Results
+            const aiResult = document.getElementById('ai-result-state');
+            aiResult.classList.remove('d-none');
+            aiResult.classList.add('fade-in'); // Assumes you have a simple fade-in CSS class
+
+            // Delay the ROI calculation slightly for dramatic effect
+            setTimeout(() => {
+                const roiResult = document.getElementById('roi-result-state');
+                roiResult.classList.remove('d-none');
+                roiResult.classList.add('fade-in');
+
+                btn.innerHTML = 'Diagnostics Complete';
+                btn.classList.replace('btn-primary-custom', 'btn-outline-secondary');
+            }, 800);
+
+        }, 2000);
+    });
+</script>
+
+<style>
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

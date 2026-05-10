@@ -447,3 +447,56 @@ body {
     border: 1px solid rgba(255,255,255,0.1);
     color: var(--color-eco-green);
 }
+
+/* Custom Table Styling */
+.table-custom {
+    background-color: transparent !important;
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-light);
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin-top: 10px;
+}
+
+.table-custom thead th {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    font-weight: 600;
+    border-top: none;
+    text-align: center !important;
+}
+
+.table-custom tbody tr {
+    background-color: rgba(255, 255, 255, 0.03);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.table-custom tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    transform: translateY(-1px);
+}
+
+.table-custom tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border: none;
+    color: var(--text-light);
+    text-align: center !important;
+}
+
+.table-custom tbody td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    font-weight: 700;
+    color: var(--color-sand);
+}
+
+.table-custom tbody td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
