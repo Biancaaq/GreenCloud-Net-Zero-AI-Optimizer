@@ -34,10 +34,12 @@ def infrastructure_map_view(request: HttpRequest) -> HttpResponse:
         'gdp': weights_input['weight_regional_economy'] / 100.0
     }
 
+    current_region = request.GET.get('region', 'ro')
+
     try:
-        results = AnalysisEngine.process_ranking(ml_weights)
+        results = AnalysisEngine.process_ranking(ml_weights, region=current_region)
         if results:
-            map_html = generate_infrastructure_map_html(results)
+            map_html = generate_infrastructure_map_html(results, current_region)
             df_results = pd.DataFrame([{
                 "Rank": f"#{r['rank']}",
                 "Region Node": r["county"],
@@ -46,11 +48,11 @@ def infrastructure_map_view(request: HttpRequest) -> HttpResponse:
             } for r in results])
         else:
             df_results = pd.DataFrame([{"Info": "No optimal regions found for given parameters."}])
-            map_html = get_fallback_map_html()
+            map_html = get_fallback_map_html(current_region)
             
     except MissingDataException as e:
         df_results = pd.DataFrame([{"Error": str(e)}])
-        map_html = get_fallback_map_html()
+        map_html = get_fallback_map_html(current_region)
 
     html_tables = df_results.to_html(classes="table table-dark table-hover table-borderless text-sm mb-0", index=False)
 
@@ -63,5 +65,6 @@ def infrastructure_map_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'infrastructure_map.html', {
         'map_html': map_html,
         'dataframes_html': html_tables,
-        'weights': weights_input
+        'weights': weights_input,
+        'current_region': current_region
     })

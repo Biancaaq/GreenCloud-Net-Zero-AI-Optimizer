@@ -408,3 +408,42 @@ body {
     border: 1px solid rgba(112, 162, 136, 0.2);
     background: linear-gradient(145deg, rgba(4, 57, 94, 0.5), rgba(3, 29, 68, 0.5));
 }
+
+/* Region Tabs Styling */
+.region-tab {
+    color: var(--text-muted);
+}
+.region-tab:hover {
+    color: white;
+}
+.region-tab.active-tab {
+    background-color: var(--color-eco-green);
+    color: #04395E !important;
+    box-shadow: 0 0 15px rgba(112, 162, 136, 0.4);
+}
+
+.region-tabs-container {
+    background-color: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.map-container-wrapper {
+    height: 60%;
+    background-color: #0d1117;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.table-container-wrapper {
+    background-color: var(--color-surface);
+}
+
+.live-grid-sync-badge {
+    background-color: rgba(112, 162, 136, 0.1);
+    border: 1px solid rgba(112, 162, 136, 0.2);
+}
+
+.total-weight-badge {
+    background-color: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--color-eco-green);
+}

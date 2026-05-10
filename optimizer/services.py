@@ -24,6 +24,18 @@ CITY_GPS = {
     "Valcea": (45.10, 24.37), "Vaslui": (46.64, 27.73), "Vrancea": (45.70, 27.18)
 }
 
+CITY_GPS_EU = {
+    # Placeholders for EU regions, can be expanded later
+    "Ile-de-France": (48.85, 2.35),
+    "Bavaria": (48.13, 11.58),
+    "Lombardy": (45.46, 9.19),
+    "Catalonia": (41.38, 2.16),
+    "Andalusia": (37.38, -5.98),
+    "North Rhine-Westphalia": (51.22, 6.77),
+    "Madrid": (40.41, -3.70),
+    "Baden-Württemberg": (48.77, 9.18),
+}
+
 CARPATHIANS_SHAPE = Polygon([
     (47.8, 23.5), (47.9, 25.5), (47.0, 26.5), (45.8, 26.8), 
     (45.4, 26.0), (45.3, 24.5), (45.1, 23.0), (44.8, 22.4), 
@@ -47,7 +59,7 @@ class MissingDataException(Exception):
 
 
 class AnalysisEngine:
-    _cached_df: pd.DataFrame = None
+    _cached_df: Dict[str, pd.DataFrame] = {}
 
     @staticmethod
     def normalize(series: pd.Series, reverse: bool = False) -> pd.Series:
@@ -77,62 +89,127 @@ class AnalysisEngine:
         return min(distances)
 
     @classmethod
-    def load_and_cache_data(cls) -> pd.DataFrame:
-        if cls._cached_df is not None:
-            return cls._cached_df.copy()
+    def load_and_cache_data(cls, region: str = 'ro') -> pd.DataFrame:
+        if region in cls._cached_df and cls._cached_df[region] is not None:
+            return cls._cached_df[region].copy()
 
+        if region == 'ro':
+            df = cls._load_ro_data()
+        else:
+            df = cls._load_eu_data()
+
+        cls._cached_df[region] = df
+        return cls._cached_df[region].copy()
+
+    @classmethod
+    def _load_ro_data(cls) -> pd.DataFrame:
         path1 = BASE_DIR / "dataset1.csv"
         path2 = BASE_DIR / "dataset2.csv"
         if not path1.exists() or not path2.exists():
-            raise MissingDataException("Datasets missing in services folder")
+            raise MissingDataException("Romanian datasets missing in services folder")
         
         df1 = pd.read_csv(path1)
         df2 = pd.read_csv(path2)
         
-        # ETL Phase: Standardize column names before merge
-        df2 = df2.rename(columns={'judet': 'county'})
+        # RO ETL
+        if 'judet' in df1.columns:
+            df1 = df1.rename(columns={'judet': 'county'})
+        if 'judet' in df2.columns:
+            df2 = df2.rename(columns={'judet': 'county'})
+            
         df = pd.merge(df1, df2.fillna(0), on='county', how='inner')
         df = df.rename(columns={
             'pib_mlrdron': 'gdp_billion_ron',
             'capacitate_total_instalata_mw': 'total_installed_capacity_mw'
         })
         
-        # Calculate base metrics
-        df['gdp_per_capita'] = (df['gdp_billion_ron'] * 1000) / df['population'].replace(0, 1)
+        df['gdp_per_capita'] = (df.get('gdp_billion_ron', 0) * 1000) / df.get('population', 1).replace(0, 1)
 
-        # Pre-compute expensive geospatial metrics to avoid per-request calculation
-        def compute_geo_modifiers(row):
+        def compute_ro_modifiers(row):
             lat, lon = CITY_GPS.get(row['county'], (45.0, 25.0))
             p = Point(lat, lon)
             mountain_mult = 1.8 if CARPATHIANS_SHAPE.contains(p) else 1.0
             dist = cls.get_distance_to_water(lat, lon)
             water_bonus = 0.80 if dist < 20 else 1.0
             return pd.Series([
-                row['average_price_sqm'] * mountain_mult, 
-                row['water_price'] * water_bonus
+                row.get('average_price_sqm', 100) * mountain_mult, 
+                row.get('water_price', 10) * water_bonus
             ])
 
-        df[['adj_land', 'adj_water']] = df.apply(compute_geo_modifiers, axis=1)
+        df[['adj_land', 'adj_water']] = df.apply(compute_ro_modifiers, axis=1)
 
-        # Pre-calculate normalized base metrics (since they don't depend on user weights)
         df['n1'] = cls.normalize(df['adj_land'], reverse=True)
         df['n2'] = cls.normalize(df['adj_water'], reverse=True)
-        df['n3'] = cls.normalize(df['avg_temp'], reverse=True)
-        df['n4'] = cls.normalize(df['green_energy'], reverse=True)
+        df['n3'] = cls.normalize(df.get('avg_temp', pd.Series([10]*len(df))), reverse=True)
+        df['n4'] = cls.normalize(df.get('green_energy', pd.Series([0]*len(df))), reverse=True)
         df['n5'] = cls.normalize(df['total_installed_capacity_mw'])
         df['n6'] = cls.normalize(df['gdp_per_capita'])
 
-        cls._cached_df = df
-        return cls._cached_df.copy()
+        return df
 
     @classmethod
-    def process_ranking(cls, weights: Dict[str, float]) -> List[Dict[str, Any]]:
+    def _load_eu_data(cls) -> pd.DataFrame:
+        path1 = BASE_DIR / "dataset1_eu.csv"
+        path2 = BASE_DIR / "dataset2_eu.csv"
+        if not path1.exists() or not path2.exists():
+            raise MissingDataException("EU datasets missing for region 'eu'")
+        
+        df1 = pd.read_csv(path1)
+        df2 = pd.read_csv(path2)
+        
+        # EU ETL: expect 'region' and 'country'
+        if 'region' in df1.columns:
+            df1 = df1.rename(columns={'region': 'county'})
+        if 'region' in df2.columns:
+            df2 = df2.rename(columns={'region': 'county'})
+            
+        # Optional: handle country column if needed
+        # df = pd.merge(df1, df2.fillna(0), on=['county', 'country'], how='inner') if 'country' in df1 and 'country' in df2 else ...
+        merge_cols = ['county']
+        if 'country' in df1.columns and 'country' in df2.columns:
+            merge_cols.append('country')
+            
+        df = pd.merge(df1, df2.fillna(0), on=merge_cols, how='inner')
+        
+        # Let's map generic EU columns if present, fallback safely
+        # We assume EU dataset might have 'pib_eur' or 'gdp'
+        if 'pib_eur' in df.columns:
+            df = df.rename(columns={'pib_eur': 'gdp_billion_eur'})
+            
+        gdp_col = 'gdp_billion_eur' if 'gdp_billion_eur' in df.columns else 'gdp'
+        df['gdp_per_capita'] = (df.get(gdp_col, 0) * 1000) / df.get('population', 1).replace(0, 1)
+
+        def compute_eu_modifiers(row):
+            # EU specific modifiers (neutral for now)
+            mountain_mult = 1.0
+            water_bonus = 1.0
+            return pd.Series([
+                row.get('average_price_sqm', 100) * mountain_mult, 
+                row.get('water_price', 10) * water_bonus
+            ])
+
+        df[['adj_land', 'adj_water']] = df.apply(compute_eu_modifiers, axis=1)
+
+        df['n1'] = cls.normalize(df['adj_land'], reverse=True)
+        df['n2'] = cls.normalize(df['adj_water'], reverse=True)
+        df['n3'] = cls.normalize(df.get('avg_temp', pd.Series([10]*len(df))), reverse=True)
+        df['n4'] = cls.normalize(df.get('green_energy', pd.Series([0]*len(df))), reverse=True)
+        
+        cap_col = 'capacitate_total_instalata_mw' if 'capacitate_total_instalata_mw' in df.columns else 'total_installed_capacity_mw'
+        df['n5'] = cls.normalize(df.get(cap_col, pd.Series([0]*len(df))))
+        df['n6'] = cls.normalize(df['gdp_per_capita'])
+
+        return df
+
+    @classmethod
+    def process_ranking(cls, weights: Dict[str, float], region: str = 'ro') -> List[Dict[str, Any]]:
         """
         Calculates top locations based on provided user weights.
         :param weights: dict containing land, water, climate, green, capacity, gdp weights
-        :return: list of top 3 counties with their scores and box coordinates
+        :param region: str 'ro' or 'eu'
+        :return: list of top 3 counties/regions with their scores and box coordinates
         """
-        df = cls.load_and_cache_data()
+        df = cls.load_and_cache_data(region)
 
         # Vectorized scoring using pre-normalized columns
         df['score'] = (
@@ -147,9 +224,15 @@ class AnalysisEngine:
         top_df = df.sort_values(by='score', ascending=False).head(3)
         results = []
         for i, row in enumerate(top_df.itertuples()):
-            lat, lon = CITY_GPS.get(row.county, (45.0, 25.0))
-            p = Point(lat, lon)
-            s_lat, s_lon = (lat - 0.12, lon - 0.12) if DELTA_POLY.contains(p) else (lat + 0.05, lon + 0.05)
+            if region == 'ro':
+                lat, lon = CITY_GPS.get(row.county, (45.0, 25.0))
+                p = Point(lat, lon)
+                s_lat, s_lon = (lat - 0.12, lon - 0.12) if DELTA_POLY.contains(p) else (lat + 0.05, lon + 0.05)
+            else:
+                # Use EU coordinates fallback, default to center of Europe (49.0, 10.0)
+                lat, lon = CITY_GPS_EU.get(row.county, (49.0, 10.0))
+                s_lat, s_lon = lat + 0.05, lon + 0.05
+                
             results.append({
                 "rank": i + 1,
                 "county": row.county,

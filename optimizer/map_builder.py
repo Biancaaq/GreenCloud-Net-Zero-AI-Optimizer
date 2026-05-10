@@ -3,25 +3,40 @@ import folium
 import json
 from typing import List, Dict, Any
 
-def get_fallback_map_html() -> str:
-    """Returns the HTML representation of a default fallback map centered on Romania."""
+def get_fallback_map_html(current_region: str = 'ro') -> str:
+    """Returns the HTML representation of a default fallback map based on the region."""
+    if current_region == 'eu':
+        map_center = [49.0, 14.0]
+        zoom = 4
+    else:
+        map_center = [45.94, 24.96]
+        zoom = 7
+
     fallback_map = folium.Map(
-        location=[45.94, 24.96], 
-        zoom_start=7, 
+        location=map_center, 
+        zoom_start=zoom, 
+        min_zoom=4,
         tiles="CartoDB dark_matter", 
         control_scale=True
     )
     return fallback_map._repr_html_()
 
-def generate_infrastructure_map_html(results: List[Dict[str, Any]]) -> str:
+def generate_infrastructure_map_html(results: List[Dict[str, Any]], current_region: str = 'ro') -> str:
     """Generates the main infrastructure map with heat layers, markers, and bounds based on ML results."""
     if not results:
         return get_fallback_map_html()
 
-    best_center = results[0]["center"]
+    if current_region == 'eu':
+        map_center = [49.0, 14.0]
+        zoom = 4
+    else:
+        map_center = results[0]["center"]
+        zoom = 7
+
     m = folium.Map(
-        location=best_center, 
-        zoom_start=7,
+        location=map_center, 
+        zoom_start=zoom,
+        min_zoom=4,
         tiles="CartoDB dark_matter",
         control_scale=True
     )
