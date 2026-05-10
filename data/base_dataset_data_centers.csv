@@ -1,16 +1,16 @@
-Operator,Location,Type,Cooling Equipment,Layout Type,Sensors (Rack/Room),Dew Point Target,Avg. IT Load (MW)
-Microsoft,"Gävle, SE",Hyperscale,Adiabatic + Free Cooling,Hot/Cold Aisle,4500+,12°C,120.0
-Microsoft,"Dublin, IE",Hyperscale,Air-Cooled Chillers,Containment,3200+,14°C,105.0
-Microsoft,"Middenmeer, NL",Hyperscale,Evaporative Cooling,Containment,2800+,13°C,70.0
-Google,"Hamina, FI",Hyperscale,Sea Water Cooling,Custom Heat Exch.,5000+,11°C,140.0
-Google,"St. Ghislain, BE",Hyperscale,Grey Water Evap.,Containment,4800+,13°C,95.0
-Equinix,"Frankfurt, DE",Colocation,Water-Cooled Chillers,Raised Floor,1500+,15°C,22.0
-Equinix,"Warsaw, PL",Colocation,DX (Direct Exp.),Raised Floor,800+,15°C,10.5
-Equinix,"London, UK",Colocation,Indirect Evap.,Hot Aisle Cont.,2200+,14°C,32.0
-OVHcloud,"Gravelines, FR",Cloud,Custom Water Blocks,Liquid-to-Chip,6000+,N/A,38.0
-Digital Realty,"Marseille, FR",Colocation,River Cooling,Raised Floor,1800+,14°C,20.0
-Meta,"Luleå, SE",Hyperscale,100% Outside Air,Penthouse Fan Wall,5500+,10°C,115.0
-Orange,"Val-de-Reuil, FR",Enterprise,Free Cooling,Hot/Cold Aisle,1200+,14°C,16.5
-Interxion,"Amsterdam, NL",Colocation,Aquifer Thermal St.,Raised Floor,2000+,14°C,13.0
-Aruba.it,"Bergamo, IT",Cloud,Geothermal/Ground,Containment,2500+,13°C,58.0
-Green Mountain,"Stavanger, NO",Hyperscale,Deep Sea Water,Custom Heat Exch.,3500+,11°C,24.0
+Location,Amb_Temp (°C),IT_Load (kW),Fan_Speed (%),PUE,Rack_Inlet (°C),Label (Expected),Operator,Timestamp_Hour,Amb_Hum_Pct,Chiller_Status
+Gavle,7.2,120000,45,1.12,21.4,OPTIMAL,Microsoft,12,45,0
+Dublin,13.5,105000,58,1.24,22.8,OPTIMAL,Microsoft,12,55,0
+Middenmeer,14.1,70000,62,1.26,23.1,OPTIMAL,Microsoft,12,52,0
+Hamina,4.8,140000,42,1.14,20.9,OPTIMAL,Google,12,40,0
+St. Ghislain,15.2,95000,65,1.19,23.5,OPTIMAL,Google,12,58,0
+Frankfurt,16.8,22000,72,1.28,24.2,STABLE,Equinix,12,50,1
+Warsaw,12.4,10500,55,1.27,23,OPTIMAL,Equinix,12,48,0
+London,15.5,32000,68,1.29,24.5,STABLE,Equinix,12,60,1
+Gravelines,14.8,38000,50,1.15,21.8,OPTIMAL,OVHcloud,12,55,0
+Marseille,22.4,20000,85,1.21,25.8,STABLE,Digital Realty,12,65,1
+Lulea,3.5,115000,38,1.09,20.5,OPTIMAL,Meta,12,35,0
+Val-de-Reuil,15.1,16500,52,1.13,22.1,OPTIMAL,Orange,12,50,0
+Amsterdam,13.8,13000,60,1.27,23.4,OPTIMAL,Interxion,12,58,0
+Bergamo,21.5,58000,82,1.32,26.5,INEFFICIENT,Aruba.it,12,62,1
+Stavanger,9.1,24000,40,1.12,21.2,OPTIMAL,Green Mountain,12,42,0

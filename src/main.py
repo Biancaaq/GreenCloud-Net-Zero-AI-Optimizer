@@ -1,108 +1,118 @@
 import pandas as pd
-
 from predict_problem import predict_problem
 from rag_engine import RAGEngine
 from cost_analyzer import analyze_costs
 
 # Configuration
-DATASET_PATH = "data/cooling_data.csv"
+DATASET_PATH = "data/base_dataset_data_centers.csv"
 
-def load_sample_from_dataset(row_index: int = 0):
-    """Loads a specific row from the CSV and prepares it for the AI pipeline."""
-    df = pd.read_csv(DATASET_PATH)
-    row = df.iloc[row_index]
+# Initialize RAG once (heavy operation)
+rag_engine = RAGEngine()
 
-    input_data = {
-        "Timestamp_Hour": row["Timestamp_Hour"],
-        "Operator": row["Operator"],
-        "Location": row["Location"],
-        "Ambient_Temp_C": row["Ambient_Temp_C"],
-        "Ambient_Hum_Pct": row["Ambient_Hum_Pct"],
-        "IT_Load_kW": row["IT_Load_kW"],
-        "Fan_Speed_Pct": row["Fan_Speed_Pct"],
-        "Chiller_Status": row["Chiller_Status"],
-        "Cold_Aisle_Temp": row["Cold_Aisle_Temp"],
-        "Hot_Aisle_Temp": row["Hot_Aisle_Temp"],
-        "Rack_Inlet_Temp": row["Rack_Inlet_Temp"],
-        "HVAC_Power_kW": row["HVAC_Power_kW"],
-        "PUE": row["PUE"]
-    }
+def run_optimization_pipeline(location_name: str):
+    """
+    Main function to run the full AI pipeline for a specific data center location.
+    Returns a dictionary with all results or prints them directly.
+    """
+    try:
+        # 1. Load and clean dataset
+        df = pd.read_csv(DATASET_PATH)
+        df.columns = [c.strip() for c in df.columns] # Clean column names
 
-    real_label = row["Efficiency_Label"]
+        # 2. Find the row for the selected location
+        location_data = df[df['Location'] == location_name]
 
-    return input_data, real_label
+        if location_data.empty:
+            return {"success": False, "error": f"Location '{location_name}' not found."}
 
+        row = location_data.iloc[0]
 
-def main():
-    # Define three different indices to test various scenarios
-    test_indices = [10, 259, 500]
-    
-    # Initialize RAG Engine once outside the loop
-    rag = RAGEngine()
+        # 3. Map input data with fallbacks (the "bulletproof" mapping)
+        input_data = {
+            "Timestamp_Hour": row.get("Timestamp_Hour", 12),
+            "Operator": row.get("Operator", "Hyperscale Operator"),
+            "Location": row.get("Location", location_name),
+            "Ambient_Temp_C": row.get("Amb_Temp (°C)", 15.0),
+            "Ambient_Hum_Pct": row.get("Amb_Hum_Pct", 50.0),
+            "IT_Load_kW": row.get("IT_Load (kW)", 0.0),
+            "Fan_Speed_Pct": row.get("Fan_Speed (%)", 0.0),
+            "Chiller_Status": row.get("Chiller_Status", 0),
+            "PUE": row.get("PUE", 1.0),
+            "Rack_Inlet_Temp": row.get("Rack_Inlet (°C)", 22.0),
+            
+            # Secondary/Calculated fields
+            "HVAC_Power_kW": float(row.get("IT_Load (kW)", 0)) * (float(row.get("PUE", 1.1)) - 1.0),
+            "Cold_Aisle_Temp": row.get("Rack_Inlet (°C)", 22.0) - 1.5,
+            "Hot_Aisle_Temp": row.get("Rack_Inlet (°C)", 22.0) + 15.0
+        }
 
-    for row_index in test_indices:
-        print("\n" + "="*60)
-        print(f" PROCESSING DATASET ROW INDEX: {row_index} ")
-        print("="*60)
-
-        # 1. Load data for the current sample
-        input_data, real_label = load_sample_from_dataset(row_index=row_index)
-
-        # 2. AI 1: Classification (Random Forest)
+        # 4. AI 1: Classification
         prediction = predict_problem(input_data)
-        predicted_label = prediction["label"]
-        confidence = prediction["confidence"]
+        
+        # 5. AI 2: RAG Recommendation
+        solution = rag_engine.retrieve_solution(prediction["label"], input_data)[0]
 
-        # 3. AI 2: RAG Recommendation (Direct Lookup)
-        solutions = rag.retrieve_solution(predicted_label, input_data)
-        solution = solutions[0]
-
-        # 4. Cost and Sustainability Analysis
+        # 6. Economics Analysis
         cost_analysis = analyze_costs(input_data, solution)
 
-        # --- Display Results ---
-        print("\n=== INPUT DATA ===")
-        for key, value in input_data.items():
-            print(f"{key}: {value}")
+        # 7. Comprehensive Result Object
+        results = {
+            "success": True,
+            "input_snapshot": input_data,
+            "prediction": prediction,
+            "solution": solution,
+            "economics": cost_analysis,
+            "real_label": row.get("Label (Expected)", "N/A")
+        }
 
-        print("\n=== AI 1: PROBLEM CLASSIFICATION ===")
-        print(f"Real dataset label: {real_label}")
-        print(f"Predicted label: {predicted_label}")
-        print(f"Model confidence: {confidence}")
+        # Display the detailed results in terminal
+        display_formatted_output(results)
+        
+        return results
 
-        print("\n=== AI 2: RAG RECOMMENDATION ===")
-        print(f"Title: {solution['title']}")
-        print(f"Risk level: {solution['risk_level']}")
-        print(f"Description: {solution['content']}")
+    except Exception as e:
+        return {"success": False, "error": str(e)}
 
-        print("\nRecommended actions:")
-        for action in solution["recommended_actions"]:
-            print(f"- {action}")
-
-        print("\nExpected impact:")
-        print(solution["expected_impact"])
-
-        print("\n=== COST AND SUSTAINABILITY ANALYSIS ===")
-        print(f"Location: {cost_analysis['location']}")
-        print(f"Energy price: {cost_analysis['energy_price_eur_per_kwh']} EUR/kWh")
-        print(f"Carbon intensity: {cost_analysis['carbon_intensity_gco2_per_kwh']} gCO2/kWh")
-
-        print(f"Current hourly HVAC cost: {cost_analysis['current_hourly_cost_eur']} EUR")
-        print(f"Current monthly HVAC cost: {cost_analysis['current_monthly_cost_eur']} EUR")
-
-        print(f"Optimized hourly HVAC cost: {cost_analysis['optimized_hourly_cost_eur']} EUR")
-        print(f"Optimized monthly HVAC cost: {cost_analysis['optimized_monthly_cost_eur']} EUR")
-
-        print(f"Estimated saving percentage: {cost_analysis['estimated_saving_pct']}%")
-        print(f"Estimated monthly savings: {cost_analysis['estimated_monthly_saving_eur']} EUR")
-
-        print(f"Current monthly CO2 emissions: {cost_analysis['current_monthly_co2_kg']} kg")
-        print(f"Estimated monthly CO2 reduction: {cost_analysis['estimated_monthly_co2_reduction_kg']} kg")
+def display_formatted_output(res):
+    """Original detailed print layout you liked."""
+    data = res["input_snapshot"]
+    pred = res["prediction"]
+    sol = res["solution"]
+    cost = res["economics"]
 
     print("\n" + "="*60)
-    print(" PIPELINE EXECUTION FINISHED ")
+    print(f" PROCESSING DATA CENTER: {data['Location']} ")
     print("="*60)
 
+    print("\n=== INPUT DATA ===")
+    for key, value in data.items():
+        print(f"{key}: {value}")
+
+    print("\n=== AI 1: PROBLEM CLASSIFICATION ===")
+    print(f"Real dataset label: {res['real_label']}")
+    print(f"Predicted label: {pred['label']}")
+    print(f"Model confidence: {pred['confidence']}")
+
+    print("\n=== AI 2: RAG RECOMMENDATION ===")
+    print(f"Title: {sol['title']}")
+    print(f"Risk level: {sol['risk_level']}")
+    print(f"Description: {sol['content']}")
+
+    print("\nRecommended actions:")
+    for action in sol["recommended_actions"]:
+        print(f"- {action}")
+
+    print("\nExpected impact:")
+    print(sol["expected_impact"])
+
+    print("\n=== COST AND SUSTAINABILITY ANALYSIS ===")
+    print(f"Location: {cost['location']}")
+    print(f"Current monthly HVAC cost: {cost['current_monthly_cost_eur']} EUR")
+    print(f"Estimated monthly savings: {cost['estimated_monthly_saving_eur']} EUR")
+    print(f"CO2 reduction: {cost['estimated_monthly_co2_reduction_kg']} kg")
+    print("\n" + "="*60)
 
 if __name__ == "__main__":
-    main()
+    # Now it works by just specifying the name!
+    # This simulates a click on the map.
+    run_optimization_pipeline("Dublin")
