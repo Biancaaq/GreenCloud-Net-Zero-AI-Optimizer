@@ -19,18 +19,26 @@ if SRC_DIR not in sys.path:
 def home_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'home.html')
 
+
+def _safe_int(value, default: int) -> int:
+    """Safely parse an integer from user input, returning default on failure."""
+    try:
+        return max(1, min(100, int(value)))
+    except (ValueError, TypeError):
+        return default
+
 def login_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'login.html')
 
 def infrastructure_map_view(request: HttpRequest) -> HttpResponse:
     # Parse weights from GET request or use defaults
     weights_input = {
-        'weight_land_price': int(request.GET.get('weight_land_price', 20)),
-        'weight_water_price': int(request.GET.get('weight_water_price', 20)),
-        'weight_climate': int(request.GET.get('weight_climate', 20)),
-        'weight_green_energy': int(request.GET.get('weight_green_energy', 20)),
-        'weight_energy_capacity': int(request.GET.get('weight_energy_capacity', 10)),
-        'weight_gdp': int(request.GET.get('weight_gdp', 10)),
+        'weight_land_price': _safe_int(request.GET.get('weight_land_price', 20), 20),
+        'weight_water_price': _safe_int(request.GET.get('weight_water_price', 20), 20),
+        'weight_climate': _safe_int(request.GET.get('weight_climate', 20), 20),
+        'weight_green_energy': _safe_int(request.GET.get('weight_green_energy', 20), 20),
+        'weight_energy_capacity': _safe_int(request.GET.get('weight_energy_capacity', 10), 10),
+        'weight_gdp': _safe_int(request.GET.get('weight_gdp', 10), 10),
     }
 
     # Map inputs to AnalysisEngine expected keys
@@ -44,6 +52,8 @@ def infrastructure_map_view(request: HttpRequest) -> HttpResponse:
     }
 
     current_region = request.GET.get('region', 'ro')
+    if current_region not in ('ro', 'eu'):
+        current_region = 'ro'
 
     try:
         results = AnalysisEngine.process_ranking(ml_weights, region=current_region)
@@ -94,6 +104,9 @@ def cooling_analyzer_view(request):
 def cooling_diagnostics_api(request):
     """API endpoint that runs the full AI pipeline from src/main.py."""
     location = request.GET.get('location', 'Dublin')
+    # Sanitize: only allow alphanumeric, spaces, hyphens, dots, and dashes
+    if not location or not all(c.isalnum() or c in ' .-' for c in location):
+        return JsonResponse({'success': False, 'error': 'Invalid location name'}, status=400)
 
     try:
         # pyrefly: ignore [missing-import]
