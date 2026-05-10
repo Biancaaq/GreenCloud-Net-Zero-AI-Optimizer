@@ -1,0 +1,92 @@
+[
+  {
+    "city": "Gävle",
+    "country": "SE",
+    "latitude": 60.6749,
+    "longitude": 17.1413
+  },
+  {
+    "city": "Dublin",
+    "country": "IE",
+    "latitude": 53.3498,
+    "longitude": -6.2603
+  },
+  {
+    "city": "Middenmeer",
+    "country": "NL",
+    "latitude": 52.8067,
+    "longitude": 5.0181
+  },
+  {
+    "city": "Hamina",
+    "country": "FI",
+    "latitude": 60.5697,
+    "longitude": 27.1979
+  },
+  {
+    "city": "St. Ghislain",
+    "country": "BE",
+    "latitude": 50.4482,
+    "longitude": 3.8189
+  },
+  {
+    "city": "Frankfurt",
+    "country": "DE",
+    "latitude": 50.1109,
+    "longitude": 8.6821
+  },
+  {
+    "city": "Warsaw",
+    "country": "PL",
+    "latitude": 52.2297,
+    "longitude": 21.0122
+  },
+  {
+    "city": "London",
+    "country": "UK",
+    "latitude": 51.5072,
+    "longitude": -0.1276
+  },
+  {
+    "city": "Gravelines",
+    "country": "FR",
+    "latitude": 50.9871,
+    "longitude": 2.1281
+  },
+  {
+    "city": "Marseille",
+    "country": "FR",
+    "latitude": 43.2965,
+    "longitude": 5.3698
+  },
+  {
+    "city": "Luleå",
+    "country": "SE",
+    "latitude": 65.5848,
+    "longitude": 22.1547
+  },
+  {
+    "city": "Val-de-Reuil",
+    "country": "FR",
+    "latitude": 49.2739,
+    "longitude": 1.2100
+  },
+  {
+    "city": "Amsterdam",
+    "country": "NL",
+    "latitude": 52.3676,
+    "longitude": 4.9041
+  },
+  {
+    "city": "Bergamo",
+    "country": "IT",
+    "latitude": 45.6983,
+    "longitude": 9.6773
+  },
+  {
+    "city": "Stavanger",
+    "country": "NO",
+    "latitude": 58.9700,
+    "longitude": 5.7331
+  }
+]
