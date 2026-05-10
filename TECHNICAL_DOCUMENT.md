@@ -1,36 +1,79 @@
 # Technical Architecture Document: GreenCloud Net Zero Optimizer
 
 ## 1. Executive Summary
-GreenCloud is a modular, Django-based analytics application designed to solve the complex geospatial optimization problem of data center placement. By evaluating real-time grid carbon intensity, regional economy metrics, and environmental geography, the system calculates a weighted "Grid Score" to recommend optimal target zones for high-intensity AI workloads. The architecture is explicitly decoupled, supporting both Romanian (National Grid) and European-wide regional analyses independently.
+GreenCloud is a modular analytics platform designed to optimize data center sustainability through two primary modules:
+1.  **Geospatial Smart Placement**: A multi-criteria decision-support system for locating new facilities.
+2.  **HVAC Optimization Engine**: An AI-driven diagnostic tool for existing infrastructure.
+
+The system is built on a decoupled architecture that bridges high-performance data processing (Pandas/NumPy) with advanced AI diagnostics (RandomForest/RAG).
+
+---
 
 ## 2. System Architecture
-The application utilizes a classic Monolithic MVC (Model-View-Template) architecture via **Django 5.0**, enhanced with asynchronous client-side rendering capabilities to emulate a Single Page Application (SPA) experience without the overhead of a heavy frontend framework.
+The application follows a modern **Monolithic MVC** architecture, optimized for the speed and specific constraints of a hackathon while maintaining enterprise-grade security standards.
 
-* **Frontend Layer**: HTML5, CSS3, Vanilla JavaScript (ES6+), Bootstrap 5.
-* **Controller Layer**: Django Views providing both standard HTML template rendering and RESTful JSON endpoints.
-* **Service/Logic Layer**: The `AnalysisEngine` singleton, powered by Pandas and Shapely.
-* **Visualization Layer**: Server-side map generation using Folium and Leaflet.js.
+### 2.1 Technology Stack
+*   **Backend Framework**: Django 6.0
+*   **AI/ML Pipeline**: Scikit-Learn (RandomForest), JSON-based Retrieval-Augmented Generation (RAG)
+*   **Data Processing**: Pandas, NumPy
+*   **Geospatial Logic**: Shapely (Geometric modifiers), Folium (Mapping)
+*   **UI Foundation**: Bootstrap 5, Vanilla JS (ES6), Glassmorphic CSS
 
-## 3. Data Processing Pipeline (ETL)
-The core logic resides in `optimizer/services.py` within the `AnalysisEngine` class. To ensure sub-second response times during user interaction (e.g., rapid slider adjustments), the engine implements an aggressive in-memory caching strategy.
+---
 
-1. **Ingestion & Caching**: Raw telemetry datasets (CSV) are loaded based on the requested region (`ro` vs `eu`). The dataframes are cached at the class level (`_cached_df`), preventing repetitive disk I/O on subsequent requests.
-2. **ETL Standardization**: Irrespective of upstream dataset schemas (e.g., `judet` vs `region`), the pipeline normalizes the spatial keys to a unified `county` namespace.
-3. **Pre-computation**: Static metrics that do not depend on user input (e.g., Base Land Price, Total Capacity) are pre-normalized. Normalization maps raw values to a strictly bounded `0-100` scale. Metrics where lower is better (e.g., Land Price, Carbon Intensity) are reversed using `100 - normalized_value`.
-4. **Vectorized Scoring**: Upon receiving an HTTP GET/AJAX request containing the user's custom weights, the engine performs a vectorized matrix multiplication across the pre-normalized columns to compute the dynamic `score`.
+## 3. The AI & Optimization Pipeline
 
-## 4. Geospatial Engine
-Geospatial logic is handled using **Shapely** and **Folium**. 
+### 3.1 Geospatial Ranking Engine (`AnalysisEngine`)
+Located in `optimizer/services.py`, this engine performs real-time scoring of geographic regions.
+*   **Normalization**: Raw metrics (Land Price, Energy Capacity, etc.) are scaled to a `0-100` range using vectorized Pandas operations.
+*   **Vectorized Scoring**: User weights are applied as a matrix multiplication across normalized columns, ensuring sub-second response times even with large datasets.
+*   **Geospatial Modifiers**: Proximity to water bodies (cooling bonus) and mountainous terrain (construction penalty) are computed using Shapely's geometric intersection logic.
 
-* **Shapely Modifiers**: Geographic reality modifies raw economic data. For example, data centers located within the Carpathian Mountains polygon (`CARPATHIANS_SHAPE`) receive a 1.8x multiplier penalty to land development costs. Proximity to major waterways (`WATER_WAYS`) applies a 0.8x bonus modifier to water utility costs, calculated via the Haversine formula.
-* **Folium Rendering**: The calculated top 3 optimal locations are injected into a Folium map instance. The backend generates raw HTML/JavaScript containing customized heat layers, bounding boxes, and interactive markers. 
+### 3.2 HVAC Diagnostic Pipeline
+The Cooling Analyzer uses a multi-stage AI pipeline:
+1.  **Classification Layer**: A `RandomForestClassifier` trained on historical telemetry (Ambient Temp, IT Load, Fan Speed) predicts the facility's efficiency label (e.g., `OPTIMAL`, `INEFFICIENT_COOLING`, `PUE_ANOMALY`).
+2.  **Knowledge Retrieval (RAG)**: The efficiency label serves as a query to a structured JSON knowledge base. The engine retrieves targeted solutions, including "Recommended Actions" and "Expected Impact."
+3.  **Economic Impact Engine**: A specialized module (`cost_analyzer.py`) calculates the Euro-denominated savings and CO2 reduction by cross-referencing local energy prices and grid carbon intensity.
 
-## 5. Asynchronous Frontend Integration
-To provide a fluid, "desktop-like" experience, the dashboard bypasses traditional page reloads:
-* **AJAX Fetch**: When the user adjusts optimization weights and clicks "Recalculate", a `fetch()` API call transmits the form data to the backend asynchronously.
-* **DOM Injection & Eval**: The backend responds with a JSON payload containing `map_html` and `dataframes_html`. The client replaces the DOM elements and utilizes `eval()` to execute the dynamically generated Folium JavaScript scripts embedded in the HTML fragment.
-* **Cross-Frame Communication**: The Folium map (often rendered as an iframe or complex DOM structure) communicates with the parent DOM via the `window.postMessage` API. Hovering over a map node dispatches a payload containing the node's rank and score, which is caught by an event listener in the parent window to instantly update the "ML Location Insights" side panel.
+---
 
-## 6. Scalability & Security Constraints
-* **Current State**: The application uses flat CSV files and in-memory singletons, optimized for the speed and specific constraints of a hackathon deployment.
-* **Future Evolution**: For production deployment, the CSV datasets must be migrated to a relational database (PostgreSQL with PostGIS extensions) managed via the Django ORM. The `eval()` based JS injection should be replaced with a strict DOM parser or a dedicated frontend mapping library (e.g., Mapbox GL JS) querying a standardized GeoJSON REST API to enforce strict Content Security Policy (CSP) compliance.
+## 4. Implementation Details
+
+### 4.1 Path Management & Modularity
+To ensure the AI pipeline (`src/`) operates seamlessly within the Django framework, the system utilizes absolute path resolution:
+*   `PROJECT_ROOT` is dynamically calculated.
+*   `sys.path` injection allows Django views to invoke the pipeline as a standalone service.
+*   All data/model paths are resolved relative to the project root, ensuring portability.
+
+### 4.2 Frontend Integration (AJAX)
+The application emulates a Single Page Application (SPA) feel using asynchronous updates:
+*   **Infrastructure Map**: Fetches new Folium map fragments and raw data tables via AJAX, injecting them into the DOM without a page reload.
+*   **Cooling Analyzer**: Transmits telemetry to the AI backend; the response is a JSON payload used by client-side JS to animate ROI counters and display diagnostic cards.
+
+---
+
+## 5. Security & Robustness
+
+### 5.1 Input Sanitization
+The platform implements strict validation for all user-facing endpoints:
+*   **Safe Parsing**: A `_safe_int` helper clamps and validates numeric weights (1-100), preventing `ValueError` crashes.
+*   **Parameter Whitelisting**: The `region` parameter is restricted to a set of valid keys (`ro`, `eu`).
+*   **Location Sanitization**: API inputs are filtered to allow only alphanumeric characters, preventing path traversal or injection attacks.
+
+### 5.2 Deployment Hardening
+The `settings.py` includes a security block that automatically activates when `DEBUG=False`:
+*   **HSTS & SSL Redirects**: Enforces secure connections.
+*   **Secure Cookies**: Enables `SESSION_COOKIE_SECURE` and `CSRF_COOKIE_SECURE`.
+*   **Frame Protection**: Set to `DENY` to prevent clickjacking.
+*   **MIME Sniffing**: `SECURE_CONTENT_TYPE_NOSNIFF` is enabled.
+
+---
+
+## 6. Future Roadmap
+*   **Relational Migration**: Transition from CSV-based flat files to PostgreSQL with PostGIS for advanced geospatial queries.
+*   **Real-time IoT Integration**: Replace manual telemetry selection with a live MQTT/Websocket feed from actual data center sensors.
+*   **Expanded RAG**: Integrate a vector database (e.g., Chroma or FAISS) to allow the RAG engine to digest hundreds of PDF sustainability reports.
+
+---
+**Net Zero Mission 2026**
+*Technical Documentation Version 1.1*
