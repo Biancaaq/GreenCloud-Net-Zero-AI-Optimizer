@@ -1,0 +1,124 @@
+name: Hackathon Security Scan
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  scan:
+    name: Multi-tool security scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare reports dir
+        run: mkdir -p reports
+
+      # ---------- Semgrep (SAST) ----------
+      - name: Install Semgrep
+        run: pipx install semgrep
+
+      - name: Run Semgrep
+        continue-on-error: true
+        run: |
+          semgrep scan \
+            --config p/default \
+            --config p/security-audit \
+            --config p/secrets \
+            --config p/owasp-top-ten \
+            --sarif --output reports/semgrep.sarif \
+            --metrics off \
+            --exclude reports || true
+
+      # ---------- Trivy (deps + IaC + secrets + misconfig) ----------
+      - name: Trivy filesystem scan (JSON)
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: json
+          output: reports/trivy.json
+          severity: CRITICAL,HIGH,MEDIUM,LOW
+          ignore-unfixed: false
+          skip-dirs: reports,node_modules,.git
+
+      - name: Trivy filesystem scan (SARIF)
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: reports/trivy.sarif
+          severity: CRITICAL,HIGH,MEDIUM
+          skip-dirs: reports,node_modules,.git
+
+      # ---------- Gitleaks binary (free, no license) ----------
+      - name: Install Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | tar -xz -C /usr/local/bin gitleaks
+          gitleaks version
+
+      - name: Run Gitleaks
+        continue-on-error: true
+        run: |
+          gitleaks detect --source . --report-format json --report-path reports/gitleaks.json --no-banner --redact || true
+
+      # ---------- Summary ----------
+      - name: Summarise findings
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "# 🛡️ Security scan summary — \`${{ github.repository }}\`"
+            echo ""
+            echo "Branch: \`${{ github.ref_name }}\` · Commit: \`${{ github.sha }}\`"
+            echo ""
+
+            if [ -f reports/semgrep.sarif ]; then
+              count=$(jq '[.runs[].results[]] | length' reports/semgrep.sarif)
+              echo "## Semgrep — **$count** findings"
+              echo ""
+              echo "| Severity | Rule | File:Line | Message |"
+              echo "|---|---|---|---|"
+              jq -r '.runs[].results[] | [(.level // "warning"), .ruleId, "\(.locations[0].physicalLocation.artifactLocation.uri):\(.locations[0].physicalLocation.region.startLine)", (.message.text | gsub("\n"; " ") | .[0:120])] | "| \(.[0]) | \(.[1]) | \(.[2]) | \(.[3]) |"' reports/semgrep.sarif | head -30
+              echo ""
+            fi
+
+            if [ -f reports/trivy.json ]; then
+              vuln=$(jq '[.Results[]?.Vulnerabilities // [] | length] | add // 0' reports/trivy.json)
+              misc=$(jq '[.Results[]?.Misconfigurations // [] | length] | add // 0' reports/trivy.json)
+              sec=$(jq '[.Results[]?.Secrets // [] | length] | add // 0' reports/trivy.json)
+              echo "## Trivy — **$vuln** vulnerabilities · **$misc** misconfigs · **$sec** secrets"
+              echo ""
+              jq -r '.Results[]? | select((.Vulnerabilities // []) | length > 0) | .Target as $t | .Vulnerabilities[] | "- **\($t)** — \(.VulnerabilityID) (\(.Severity)) in `\(.PkgName)@\(.InstalledVersion)` → fixed in \(.FixedVersion // "—")"' reports/trivy.json | head -20
+              echo ""
+            fi
+
+            if [ -f reports/gitleaks.json ]; then
+              gl=$(jq 'length' reports/gitleaks.json)
+              echo "## Gitleaks — **$gl** secret findings"
+              echo ""
+              jq -r '.[] | "- **\(.RuleID)** in `\(.File):\(.StartLine)` (commit \(.Commit[0:7]))"' reports/gitleaks.json | head -20
+            fi
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reports artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: reports/
+          retention-days: 90
